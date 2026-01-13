@@ -3,66 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <title>FB OTP SENDER</title>
+    <title>FB OTP SENDER V6</title>
     <style>
-        body { background: #000; color: #00ff41; font-family: monospace; padding: 15px; }
-        .box { border: 1px solid #00ff41; padding: 15px; border-radius: 10px; box-shadow: 0 0 10px #00ff41; }
-        textarea { width: 93%; background: #111; color: #fff; border: 1px solid #00ff41; padding: 10px; height: 100px; margin-bottom: 10px; border-radius: 5px; }
-        button { width: 100%; padding: 12px; background: #00ff41; color: #000; border: none; font-weight: bold; cursor: pointer; border-radius: 5px; }
-        .stats { display: flex; justify-content: space-between; margin: 10px 0; font-size: 14px; }
-        #logs { height: 250px; overflow-y: auto; background: #050505; padding: 10px; border: 1px solid #333; font-size: 12px; margin-top: 10px; }
-        .live { color: #00ff41; }
+        body { background: #000; color: #00ff41; font-family: 'Courier New', monospace; padding: 15px; }
+        .box { border: 2px solid #00ff41; padding: 20px; border-radius: 10px; box-shadow: 0 0 20px #00ff41; max-width: 500px; margin: auto; }
+        textarea, input { width: 100%; background: #0a0a0a; color: #00ff41; border: 1px solid #00ff41; padding: 12px; margin-bottom: 15px; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background: #00ff41; color: #000; font-weight: bold; border: none; cursor: pointer; text-transform: uppercase; }
+        .stats { display: flex; justify-content: space-around; margin: 15px 0; font-size: 18px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        #logs { height: 250px; overflow-y: auto; border: 1px solid #222; padding: 10px; background: #050505; font-size: 13px; line-height: 1.6; }
+        .live { color: #00ff41; text-shadow: 0 0 5px #00ff41; }
         .die { color: #ff3131; }
+        .header { text-align: center; margin-bottom: 20px; text-shadow: 0 0 10px #00ff41; }
     </style>
 </head>
 <body>
     <div class="box">
-        <h2 align="center">FB OTP SENDER V1</h2>
+        <div class="header"><h2>⚡ FB OTP SENDER V6 ⚡</h2></div>
+        
+        <input type="text" id="proxy" placeholder="Proxy (User:Pass@IP:Port) - Optional">
+        <textarea id="list" rows="8" placeholder="Enter Mobile Numbers (One per line)"></textarea>
+        
         <div class="stats">
-            <span>LIVE: <b id="l">0</b></span>
-            <span>DIE: <b id="d">0</b></span>
+            <span class="live">LIVE: <b id="live_count">0</b></span>
+            <span class="die">DIE: <b id="die_count">0</b></span>
         </div>
-        <textarea id="numList" placeholder="Enter numbers (one per line)"></textarea>
+        
         <button onclick="start()">START ATTACK</button>
-        <div id="logs">>> System Initialized...<br></div>
+        <div id="logs">> Terminal Ready...</div>
     </div>
 
     <script>
-        let tg = window.Telegram.WebApp;
-        tg.expand();
-
         async function start() {
-            let list = document.getElementById('numList').value.split('\n');
-            let logBox = document.getElementById('logs');
-            let l_cnt = 0, d_cnt = 0;
+            const numbers = document.getElementById('list').value.split('\n').filter(n => n.trim() !== "");
+            const proxy = document.getElementById('proxy').value.trim();
+            let live = 0, die = 0;
+            const logBox = document.getElementById('logs');
 
-            for(let phone of list) {
-                if(!phone.trim()) continue;
-                logBox.innerHTML += `> Checking: ${phone}...<br>`;
+            logBox.innerHTML += `<div>> Starting Attack on ${numbers.length} numbers...</div>`;
+
+            for (let num of numbers) {
+                logBox.innerHTML += `<div>> Checking: ${num}...</div>`;
                 logBox.scrollTop = logBox.scrollHeight;
 
                 try {
-                    let res = await fetch('/check', {
+                    const response = await fetch('/check', {
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({phone: phone.trim()})
+                        body: JSON.stringify({phone: num.trim(), proxy: proxy})
                     });
-                    let data = await res.json();
+                    const result = await response.json();
 
-                    if(data.status === "LIVE") {
-                        l_cnt++; document.getElementById('l').innerText = l_cnt;
-                        logBox.innerHTML += `<span class="live">> [HIT] ${phone} - ${data.msg}</span><br>`;
+                    if (result.status === 'LIVE') {
+                        live++; document.getElementById('live_count').innerText = live;
+                        logBox.innerHTML += `<div class="live">> [SUCCESS] ${num} - OTP SENT! ✅</div>`;
                     } else {
-                        d_cnt++; document.getElementById('d').innerText = d_cnt;
-                        logBox.innerHTML += `<span class="die">> [BAD] ${phone} - ${data.msg}</span><br>`;
+                        die++; document.getElementById('die_count').innerText = die;
+                        logBox.innerHTML += `<div class="die">> [FAILED] ${num} - Dead ❌</div>`;
                     }
-                } catch(e) {
-                    logBox.innerHTML += `<span>> Error connecting to server</span><br>`;
+                } catch (e) {
+                    logBox.innerHTML += `<div class="die">> [ERROR] Connection Failed</div>`;
                 }
-                await new Promise(r => setTimeout(r, 800)); // সামান্য ডিলে
             }
+            logBox.innerHTML += `<div>> Attack Finished.</div>`;
         }
     </script>
 </body>
-</html>
+    </html>
