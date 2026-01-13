@@ -7,43 +7,48 @@
     <style>
         :root { --main-green: #2ecc71; --bg-gray: #f8f9fa; }
         body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 10px; }
-        .app-card { max-width: 450px; margin: auto; background: white; border-radius: 40px; padding: 25px; min-height: 90vh; }
+        .app-card { max-width: 450px; margin: auto; background: white; border-radius: 40px; padding: 25px; min-height: 95vh; box-shadow: 0 10px 40px rgba(0,0,0,0.05); }
         
-        /* Navigation */
+        /* Tabs */
         .nav-tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; }
-        .tab { padding: 12px 25px; border-radius: 15px; border: 1px solid #eee; background: white; font-weight: bold; cursor: pointer; color: #7f8c8d; flex: 1; }
-        .tab.active { background: var(--main-green); color: white; border: none; box-shadow: 0 4px 15px rgba(46,204,113,0.3); }
+        .tab { padding: 12px 25px; border-radius: 15px; border: 1px solid #eee; background: white; font-weight: bold; cursor: pointer; color: #7f8c8d; flex: 1; transition: 0.3s; }
+        .tab.active { background: var(--main-green); color: white; border: none; }
 
-        /* Dashboard Stats (Zeroed) */
+        /* Stats Cards */
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-        .stat-box { background: #fff; border: 1px solid #f0f0f0; border-radius: 20px; padding: 15px; text-align: center; }
+        .stat-box { background: #fff; border: 1.5px solid #f8f9fa; padding: 18px; border-radius: 20px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
         .stat-val { display: block; font-size: 26px; font-weight: bold; }
+        .stat-label { font-size: 10px; color: #bdc3c7; font-weight: bold; text-transform: uppercase; }
 
-        /* Settings View */
-        .engine-container { background: #fff; border: 1px solid #f0f0f0; border-radius: 25px; padding: 20px; margin-top: 15px; }
-        .engine-row { display: flex; justify-content: space-between; align-items: center; }
-        .status-badge { background: #eef2f7; color: #3498db; padding: 8px 12px; border-radius: 10px; font-size: 10px; font-weight: bold; display: none; }
-        
-        .toggle-btn { padding: 8px 20px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .btn-off { background: #edeff2; color: #a0a5ab; }
-        .btn-active { background: var(--main-green); color: white; }
+        /* Kernel Log Section */
+        .log-panel { background: #fff; border: 1px solid #f0f0f0; border-radius: 25px; padding: 20px; margin-top: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.03); }
+        .log-title { color: var(--main-green); font-weight: bold; font-size: 12px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .log-title::before { content: '●'; font-size: 18px; }
+        .log-content { height: 180px; overflow-y: auto; font-size: 11px; font-family: monospace; border-right: 2px solid #eee; }
+        .log-line { margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
+        .l-time { color: #bdc3c7; font-weight: normal; }
+        .l-green { color: var(--main-green); font-weight: bold; }
+        .l-red { color: #e74c3c; font-weight: bold; }
+        .l-yellow { color: #f1c40f; font-weight: bold; }
 
-        /* Hidden Proxy Section */
-        #proxy-options { display: none; margin-top: 15px; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Action Buttons */
+        .action-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
+        .btn-start { background: #a2f9c5; color: #2ecc71; border: none; padding: 15px; border-radius: 15px; font-weight: bold; cursor: pointer; }
+        .btn-stop { background: white; color: #e74c3c; border: 1px solid #f9d5d5; padding: 15px; border-radius: 15px; font-weight: bold; cursor: pointer; }
 
-        .p-select { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #f0f0f0; background: #f9f9f9; color: #3498db; font-weight: bold; margin-bottom: 10px; outline: none; }
-        .p-box { width: 100%; background: #edeff2; border: none; border-radius: 15px; padding: 15px; height: 100px; font-size: 11px; color: #7f8c8d; font-family: monospace; box-sizing: border-box; }
-        
-        textarea { width: 100%; border: 1px solid #f0f0f0; border-radius: 20px; padding: 15px; height: 150px; box-sizing: border-box; margin-bottom: 15px; outline: none; }
-        .btn-start { width: 100%; background: var(--main-green); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: bold; font-size: 16px; cursor: pointer; }
+        /* Settings Toggle Logic */
+        #proxy-input-sec { display: none; margin-top: 15px; }
+        .p-select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #eee; margin-bottom: 10px; background: #f9f9f9; color: #3498db; font-weight: bold; }
+        .p-box { width: 100%; background: #edeff2; border: none; border-radius: 15px; padding: 15px; height: 100px; font-size: 11px; box-sizing: border-box; }
+
+        textarea { width: 100%; border: 1.5px solid #f0f0f0; border-radius: 20px; padding: 20px; height: 130px; box-sizing: border-box; outline: none; }
         .hidden { display: none; }
     </style>
 </head>
 <body>
 
 <div class="app-card">
-    <div style="text-align:center; margin-bottom:20px;"><h2 style="color:var(--main-green); margin:0;">AdvanCE ToolS</h2></div>
+    <div style="text-align:center; margin-bottom:15px;"><h2 style="color:var(--main-green); margin:0;">AdvanCE ToolS</h2></div>
 
     <div class="nav-tabs">
         <button class="tab active" id="d-btn" onclick="tab('dash')">DASHBOARD</button>
@@ -52,13 +57,24 @@
 
     <div id="dash-v">
         <div class="stats-grid">
-            <div class="stat-box"><span class="stat-val" style="color:var(--main-green)" id="l_c">0</span><small>CODE SEND</small></div>
-            <div class="stat-box"><span class="stat-val" style="color:#e74c3c" id="d_c">0</span><small>NO ACC</small></div>
-            <div class="stat-box"><span class="stat-val" style="color:#f1c40f" id="c_c">0</span><small>CAPTCHA</small></div>
-            <div class="stat-box"><span class="stat-val" style="color:#3498db" id="t_c">0</span><small>TOTAL</small></div>
+            <div class="stat-box"><span class="stat-val" style="color:var(--main-green)" id="code_c">0</span><span class="stat-label">CODE SEND</span></div>
+            <div class="stat-box"><span class="stat-val" style="color:#e74c3c" id="no_c">0</span><span class="stat-label">NO ACC</span></div>
+            <div class="stat-box"><span class="stat-val" style="color:#f1c40f" id="cap_c">0</span><span class="stat-label">CAPTCHA</span></div>
+            <div class="stat-box"><span class="stat-val" style="color:#3498db" id="tot_c">0</span><span class="stat-label">TOTAL</span></div>
         </div>
-        <textarea id="num_input" placeholder="Enter Target Numbers..."></textarea>
-        <button class="btn-start" onclick="start()">BN START</button>
+
+        <textarea id="num_list" placeholder="Target Numbers List..."></textarea>
+        
+        <div class="action-btns">
+            <button class="btn-start" onclick="startProcess()">START</button>
+            <button class="btn-stop" onclick="stopProcess()">STOP</button>
+        </div>
+
+        <div class="log-panel">
+            <div class="log-title">LIVE KERNEL LOG</div>
+            <div class="log-content" id="log-box">
+                </div>
+        </div>
     </div>
 
     <div id="set-v" class="hidden">
@@ -67,39 +83,30 @@
             <p style="font-size:9px; color:#bdc3c7;">OPTIMIZE ENGINE FOR TARGET WORKLOAD</p>
         </div>
 
-        <div class="engine-container">
-            <div class="engine-row">
-                <div><b>PARALLEL THREADS</b><br><small style="color:#bdc3c7; font-size:8px;">WORKLOAD INTENSITY</small></div>
-                <span id="t-num" style="color:var(--main-green); font-weight:bold; font-size:20px;">20</span>
+        <div class="stat-box" style="margin-bottom:15px; text-align:left;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <b>PARALLEL THREADS</b>
+                <span id="t-val" style="color:var(--main-green); font-size:20px; font-weight:bold;">20</span>
             </div>
-            <input type="range" min="1" max="20" value="20" style="width:100%; accent-color:var(--main-green);" oninput="document.getElementById('t-num').innerText=this.value">
+            <input type="range" min="1" max="20" value="20" style="width:100%; accent-color:var(--main-green);" oninput="document.getElementById('t-val').innerText=this.value">
         </div>
 
-        <div class="engine-container">
-            <div class="engine-row">
-                <div><b style="color:var(--main-green);">PROXY POOL ENGINE</b><br><small style="color:#bdc3c7; font-size:8px;">SUPPORTS IP ROTATION</small></div>
-                <div style="display:flex; align-items:center; gap:8px;">
-                    <div class="status-badge" id="p-badge">0<span>LOADED</span></div>
-                    <button class="toggle-btn btn-off" id="p-tgl" onclick="toggleP()">OFF</button>
-                </div>
+        <div class="stat-box" style="text-align:left;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <b style="color:var(--main-green);">PROXY POOL ENGINE</b>
+                <button id="p-tgl" onclick="toggleProxy()" style="padding:8px 20px; border-radius:8px; border:none; background:#edeff2; font-weight:bold; cursor:pointer;">OFF</button>
             </div>
-
-            <div id="proxy-options">
-                <select class="p-select">
-                    <option>HTTP</option>
-                    <option>SOCKS5</option>
-                </select>
+            
+            <div id="proxy-input-sec">
+                <select class="p-select"><option>HTTP</option><option>SOCKS5</option></select>
                 <textarea class="p-box" placeholder="Paste proxy list here..."></textarea>
             </div>
         </div>
     </div>
-    
-    <div style="text-align:center; margin-top:30px;">
-        <a href="https://t.me/shakilkhan909090" style="text-decoration:none; color:var(--main-green); font-weight:bold; border:1px solid #eee; padding:10px 25px; border-radius:50px; font-size:12px;">SUPPORT</a>
-    </div>
 </div>
 
 <script>
+    let isRunning = false;
     function tab(t) {
         document.getElementById('dash-v').classList.toggle('hidden', t!=='dash');
         document.getElementById('set-v').classList.toggle('hidden', t!=='set');
@@ -107,29 +114,39 @@
         document.getElementById('s-btn').classList.toggle('active', t==='set');
     }
 
-    function toggleP() {
+    function toggleProxy() {
         const btn = document.getElementById('p-tgl');
-        const options = document.getElementById('proxy-options');
-        const badge = document.getElementById('p-badge');
-        
-        if(btn.classList.contains('btn-off')) {
-            btn.innerText = "ACTIVE";
-            btn.className = "toggle-btn btn-active";
-            options.style.display = "block"; // Show Box & Select
-            badge.style.display = "block";
+        const sec = document.getElementById('proxy-input-sec');
+        if(btn.innerText === "OFF") {
+            btn.innerText = "ACTIVE"; btn.style.background = "#2ecc71"; btn.style.color = "white";
+            sec.style.display = "block";
         } else {
-            btn.innerText = "OFF";
-            btn.className = "toggle-btn btn-off";
-            options.style.display = "none"; // Hide Box & Select
-            badge.style.display = "none";
+            btn.innerText = "OFF"; btn.style.background = "#edeff2"; btn.style.color = "#a0a5ab";
+            sec.style.display = "none";
         }
     }
 
-    async function start() {
-        const lines = document.getElementById('num_input').value.split('\n').filter(x => x.trim() !== "");
-        document.getElementById('t_c').innerText = lines.length;
-        // রিয়েল চেকিং লজিক এখানে চলবে...
+    function addLog(type, num) {
+        const box = document.getElementById('log-box');
+        const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
+        let content = '';
+        if(type === 'live') content = `<span class="l-green">✅ CODE SEND: ${num}</span>`;
+        if(type === 'no') content = `<span class="l-red">🔴 NO ACC: ${num}</span>`;
+        if(type === 'cap') content = `<span class="l-yellow">⚠️ CAPTCHA: ${num}</span>`;
+        
+        box.innerHTML += `<div class="log-line"><span class="l-time">[${time}]</span> ${content}</div>`;
+        box.scrollTop = box.scrollHeight;
     }
+
+    function startProcess() {
+        isRunning = true;
+        const nums = document.getElementById('num_list').value.split('\n').filter(n => n.trim() !== "");
+        document.getElementById('tot_c').innerText = nums.length;
+        // এখানে আপনার ব্যাকএন্ড লজিক কল হবে
+        addLog('live', '212638353973'); // ডেমো লগ
+    }
+
+    function stopProcess() { isRunning = false; }
 </script>
 </body>
-            </html>
+</html>
