@@ -5,92 +5,120 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Advance Tools V6.0 PRO</title>
     <style>
-        :root { --main-green: #2ecc71; --bg-white: #f8f9fa; --text-gray: #7f8c8d; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-white); margin: 0; padding: 10px; }
-        .app-container { max-width: 500px; margin: auto; background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); padding: 20px; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .logo { font-size: 24px; font-weight: bold; color: var(--main-green); }
-        .version-badge { background: #e8f5e9; color: var(--main-green); padding: 5px 12px; border-radius: 50px; font-size: 12px; font-weight: bold; }
+        :root { --main-green: #2ecc71; --bg-light: #f8f9fa; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg-light); margin: 0; padding: 10px; color: #333; }
+        .container { max-width: 500px; margin: auto; background: white; border-radius: 30px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); min-height: 90vh; }
+        
+        /* Header & Tabs */
+        .logo-area { text-align: center; margin-bottom: 20px; }
+        .logo-text { font-size: 28px; font-weight: bold; color: var(--main-green); letter-spacing: -1px; }
+        .tab-group { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; }
+        .tab-btn { padding: 10px 25px; border-radius: 50px; border: 1px solid #eee; background: white; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 5px; color: #7f8c8d; transition: 0.3s; }
+        .tab-btn.active { background: var(--main-green); color: white; border-color: var(--main-green); box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3); }
+
+        /* Dashboard View */
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-        .stat-card { background: white; border: 1px solid #eee; padding: 15px; border-radius: 15px; text-align: center; }
-        .stat-val { font-size: 24px; font-weight: bold; display: block; }
-        .code-send { color: var(--main-green); } .no-acc { color: #e74c3c; } .captcha { color: #f1c40f; }
-        .input-area textarea { width: 100%; border: 1px solid #eee; border-radius: 15px; padding: 15px; height: 120px; font-family: monospace; box-sizing: border-box; }
-        .btn-group { display: flex; gap: 10px; margin: 15px 0; }
-        button { flex: 1; padding: 15px; border-radius: 50px; border: none; font-weight: bold; cursor: pointer; font-size: 16px; }
-        .btn-start { background: var(--main-green); color: white; } .btn-stop { background: #fff; color: #e74c3c; border: 1px solid #e74c3c; }
-        .kernel-log { background: #fff; border: 1px solid #eee; border-radius: 15px; padding: 15px; height: 200px; overflow-y: auto; font-size: 11px; font-family: monospace; }
-        .log-entry { margin-bottom: 8px; display: flex; gap: 5px; }
-        .time { color: var(--text-gray); } .status-ok { color: var(--main-green); } .status-fail { color: #e74c3c; }
+        .stat-card { background: white; border: 1px solid #f0f0f0; padding: 15px; border-radius: 20px; text-align: center; }
+        .stat-val { font-size: 26px; font-weight: bold; display: block; margin-bottom: 5px; }
+        .label { font-size: 10px; color: #bdc3c7; font-weight: bold; }
+        
+        /* Settings View */
+        .setting-item { background: white; border: 1px solid #f0f0f0; padding: 20px; border-radius: 20px; margin-bottom: 15px; }
+        .setting-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .setting-title { font-weight: bold; font-size: 14px; text-transform: uppercase; color: #2c3e50; }
+        .setting-val { color: var(--main-green); font-weight: bold; font-size: 18px; }
+        .switch { position: relative; display: inline-block; width: 45px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--main-green); }
+        input:checked + .slider:before { transform: translateX(21px); }
+
+        /* Common Elements */
+        textarea { width: 100%; border: 1px solid #eee; border-radius: 20px; padding: 15px; height: 150px; box-sizing: border-box; font-family: monospace; margin-bottom: 15px; outline: none; }
+        .btn-start { width: 100%; padding: 18px; border-radius: 50px; border: none; background: var(--main-green); color: white; font-weight: bold; font-size: 16px; cursor: pointer; box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3); }
+        #log-panel { background: #fafafa; border-radius: 20px; padding: 15px; height: 200px; overflow-y: auto; font-size: 11px; font-family: monospace; margin-top: 15px; border: 1px solid #eee; }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <div class="header">
-            <div class="logo">AdvanCE ToolS</div>
-            <div class="version-badge">V6.0 PRO</div>
-        </div>
 
-        <div class="stats-grid">
-            <div class="stat-card"><span class="stat-val code-send" id="cnt_live">0</span>CODE SEND</div>
-            <div class="stat-card"><span class="stat-val no-acc" id="cnt_die">0</span>NO ACC</div>
-            <div class="stat-card"><span class="stat-val captcha" id="cnt_cap">0</span>CAPTCHA</div>
-            <div class="stat-card"><span class="stat-val" style="color:#3498db" id="cnt_total">0</span>TOTAL</div>
-        </div>
+<div class="container">
+    <div class="logo-area"><div class="logo-text">AdvanCE ToolS</div></div>
 
-        <div class="input-area">
-            <textarea id="num_list" placeholder="Enter Target Numbers..."></textarea>
-        </div>
-
-        <div class="btn-group">
-            <button class="btn-start" onclick="startEngine()">START</button>
-            <button class="btn-stop" onclick="location.reload()">STOP</button>
-        </div>
-
-        <div class="kernel-log" id="logs">
-            <div class="log-entry"><span class="status-ok">● LIVE KERNEL LOG</span></div>
-            <div class="log-entry"><span class="time">[INIT]</span> System Ready...</div>
-        </div>
-        <p style="text-align:center; font-size:10px; color:#bdc3c7; margin-top:15px;">© 2026 ADVANCE • THE ULTIMATE ENGINE</p>
+    <div class="tab-group">
+        <button class="tab-btn active" id="dash-tab" onclick="showTab('dashboard')">📊 DASHBOARD</button>
+        <button class="tab-btn" id="set-tab" onclick="showTab('settings')">⚙️ SETTINGS</button>
     </div>
 
-    <script>
-        async function startEngine() {
-            const lines = document.getElementById('num_list').value.split('\n').filter(x => x.trim() !== "");
-            document.getElementById('cnt_total').innerText = lines.length;
-            const logBox = document.getElementById('logs');
-            let live = 0, die = 0, cap = 0;
+    <div id="dashboard-view">
+        <div class="stats-grid">
+            <div class="stat-card"><span class="stat-val" style="color:var(--main-green)" id="l">0</span><span class="label">CODE SEND</span></div>
+            <div class="stat-card"><span class="stat-val" style="color:#e74c3c" id="d">0</span><span class="label">NO ACC</span></div>
+            <div class="stat-card"><span class="stat-val" style="color:#f1c40f" id="c">0</span><span class="label">CAPTCHA</span></div>
+            <div class="stat-card"><span class="stat-val" style="color:#3498db" id="t">0</span><span class="label">TOTAL</span></div>
+        </div>
+        <textarea id="numbers" placeholder="Enter Target Numbers..."></textarea>
+        <button class="btn-start" onclick="start()">START ATTACK</button>
+        <div id="log-panel">● LIVE KERNEL LOG READY...</div>
+    </div>
 
-            for (let phone of lines) {
-                const now = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
-                logBox.innerHTML += `<div class="log-entry"><span class="time">[${now}]</span> ⚙️ PROCESSING: ${phone}</div>`;
-                logBox.scrollTop = logBox.scrollHeight;
+    <div id="settings-view" class="hidden">
+        <div class="setting-item">
+            <div class="setting-header"><span class="setting-title">Parallel Threads</span><span class="setting-val">20</span></div>
+            <input type="range" style="width:100%; accent-color:var(--main-green);" value="20">
+        </div>
+        <div class="setting-item">
+            <div class="setting-header"><span class="setting-title">Stealth / Headless</span>
+                <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            </div>
+        </div>
+        <div class="setting-item">
+            <div class="setting-header"><span class="setting-title">Data Saver (Turbo)</span>
+                <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            </div>
+        </div>
+        <button class="btn-start" style="background:#34495e;">SAVE CONFIGURATION</button>
+    </div>
 
-                try {
-                    const res = await fetch('/check', {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({phone: phone.trim()})
-                    });
-                    const data = await res.json();
+    <p style="text-align:center; font-size:10px; color:#bdc3c7; margin-top:20px;">© 2026 ADVANCE • THE ULTIMATE ENGINE</p>
+</div>
 
-                    if (data.status === 'LIVE') {
-                        live++; document.getElementById('cnt_live').innerText = live;
-                        logBox.innerHTML += `<div class="log-entry"><span class="time">[${now}]</span> <span class="status-ok">✅ CODE SEND: ${phone}</span></div>`;
-                    } else if (data.status === 'CP/LOCK') {
-                        cap++; document.getElementById('cnt_cap').innerText = cap;
-                        logBox.innerHTML += `<div class="log-entry"><span class="time">[${now}]</span> <span class="captcha">⚠️ CAPTCHA/LOCK: ${phone}</span></div>`;
-                    } else {
-                        die++; document.getElementById('cnt_die').innerText = die;
-                        logBox.innerHTML += `<div class="log-entry"><span class="time">[${now}]</span> <span class="status-fail">🔴 NO ACC: ${phone}</span></div>`;
-                    }
-                } catch (e) {
-                    logBox.innerHTML += `<div class="log-entry"><span class="status-fail">❌ CONNECTION ERROR</span></div>`;
-                }
-                logBox.scrollTop = logBox.scrollHeight;
-                await new Promise(r => setTimeout(r, 1000)); // Rate limit protection
-            }
+<script>
+    function showTab(tab) {
+        if(tab === 'dashboard') {
+            document.getElementById('dashboard-view').classList.remove('hidden');
+            document.getElementById('settings-view').classList.add('hidden');
+            document.getElementById('dash-tab').classList.add('active');
+            document.getElementById('set-tab').classList.remove('active');
+        } else {
+            document.getElementById('dashboard-view').classList.add('hidden');
+            document.getElementById('settings-view').classList.remove('hidden');
+            document.getElementById('dash-tab').classList.remove('active');
+            document.getElementById('set-tab').classList.add('active');
         }
-    </script>
+    }
+
+    async function start() {
+        const nums = document.getElementById('numbers').value.split('\n').filter(n => n.trim() !== "");
+        document.getElementById('t').innerText = nums.length;
+        const log = document.getElementById('log-panel');
+        let l=0, d=0, c=0;
+
+        for(let num of nums) {
+            log.innerHTML += `<div>> Processing: ${num}</div>`;
+            log.scrollTop = log.scrollHeight;
+            const res = await fetch('/check', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({phone: num.trim()})
+            });
+            const data = await res.json();
+            if(data.status === 'LIVE') { l++; document.getElementById('l').innerText = l; }
+            else if(data.status === 'CP/LOCK') { c++; document.getElementById('c').innerText = c; }
+            else { d++; document.getElementById('d').innerText = d; }
+        }
+    }
+</script>
 </body>
-</html>
+    </html>
