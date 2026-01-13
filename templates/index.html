@@ -3,69 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FB OTP SENDER V6</title>
+    <title>Advance Tools V6.0 PRO</title>
     <style>
-        body { background: #000; color: #00ff41; font-family: 'Courier New', monospace; padding: 15px; }
-        .box { border: 2px solid #00ff41; padding: 20px; border-radius: 10px; box-shadow: 0 0 20px #00ff41; max-width: 500px; margin: auto; }
-        textarea, input { width: 100%; background: #0a0a0a; color: #00ff41; border: 1px solid #00ff41; padding: 12px; margin-bottom: 15px; box-sizing: border-box; }
-        button { width: 100%; padding: 15px; background: #00ff41; color: #000; font-weight: bold; border: none; cursor: pointer; text-transform: uppercase; }
-        .stats { display: flex; justify-content: space-around; margin: 15px 0; font-size: 18px; border-bottom: 1px solid #333; padding-bottom: 10px; }
-        #logs { height: 250px; overflow-y: auto; border: 1px solid #222; padding: 10px; background: #050505; font-size: 13px; line-height: 1.6; }
-        .live { color: #00ff41; text-shadow: 0 0 5px #00ff41; }
-        .die { color: #ff3131; }
-        .header { text-align: center; margin-bottom: 20px; text-shadow: 0 0 10px #00ff41; }
+        :root { --main-green: #2ecc71; --bg-white: #f8f9fa; --text-gray: #7f8c8d; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-white); margin: 0; padding: 10px; }
+        .app-container { max-width: 500px; margin: auto; background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); padding: 20px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .logo { font-size: 24px; font-weight: bold; color: var(--main-green); }
+        .version-badge { background: #e8f5e9; color: var(--main-green); padding: 5px 12px; border-radius: 50px; font-size: 12px; font-weight: bold; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .stat-card { background: white; border: 1px solid #eee; padding: 15px; border-radius: 15px; text-align: center; }
+        .stat-val { font-size: 24px; font-weight: bold; display: block; }
+        .code-send { color: var(--main-green); } .no-acc { color: #e74c3c; } .captcha { color: #f1c40f; }
+        .input-area textarea { width: 100%; border: 1px solid #eee; border-radius: 15px; padding: 15px; height: 120px; font-family: monospace; box-sizing: border-box; }
+        .btn-group { display: flex; gap: 10px; margin: 15px 0; }
+        button { flex: 1; padding: 15px; border-radius: 50px; border: none; font-weight: bold; cursor: pointer; font-size: 16px; }
+        .btn-start { background: var(--main-green); color: white; } .btn-stop { background: #fff; color: #e74c3c; border: 1px solid #e74c3c; }
+        .kernel-log { background: #fff; border: 1px solid #eee; border-radius: 15px; padding: 15px; height: 200px; overflow-y: auto; font-size: 11px; font-family: monospace; }
+        .log-entry { margin-bottom: 8px; display: flex; gap: 5px; }
+        .time { color: var(--text-gray); } .status-ok { color: var(--main-green); } .status-fail { color: #e74c3c; }
     </style>
 </head>
 <body>
-    <div class="box">
-        <div class="header"><h2>⚡ FB OTP SENDER V6 ⚡</h2></div>
-        
-        <input type="text" id="proxy" placeholder="Proxy (User:Pass@IP:Port) - Optional">
-        <textarea id="list" rows="8" placeholder="Enter Mobile Numbers (One per line)"></textarea>
-        
-        <div class="stats">
-            <span class="live">LIVE: <b id="live_count">0</b></span>
-            <span class="die">DIE: <b id="die_count">0</b></span>
+    <div class="app-container">
+        <div class="header">
+            <div class="logo">AdvanCE ToolS</div>
+            <div class="version-badge">V6.0 PRO</div>
         </div>
-        
-        <button onclick="start()">START ATTACK</button>
-        <div id="logs">> Terminal Ready...</div>
+
+        <div class="stats-grid">
+            <div class="stat-card"><span class="stat-val code-send" id="cnt_live">0</span>CODE SEND</div>
+            <div class="stat-card"><span class="stat-val no-acc" id="cnt_die">0</span>NO ACC</div>
+            <div class="stat-card"><span class="stat-val captcha" id="cnt_cap">0</span>CAPTCHA</div>
+            <div class="stat-card"><span class="stat-val" style="color:#3498db" id="cnt_total">0</span>TOTAL</div>
+        </div>
+
+        <div class="input-area">
+            <textarea id="num_list" placeholder="Enter Target Numbers..."></textarea>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn-start" onclick="startEngine()">START</button>
+            <button class="btn-stop" onclick="location.reload()">STOP</button>
+        </div>
+
+        <div class="kernel-log" id="logs">
+            <div class="log-entry"><span class="status-ok">● LIVE KERNEL LOG</span></div>
+            <div class="log-entry"><span class="time">[INIT]</span> System Ready...</div>
+        </div>
+        <p style="text-align:center; font-size:10px; color:#bdc3c7; margin-top:15px;">© 2026 ADVANCE • THE ULTIMATE ENGINE</p>
     </div>
 
     <script>
-        async function start() {
-            const numbers = document.getElementById('list').value.split('\n').filter(n => n.trim() !== "");
-            const proxy = document.getElementById('proxy').value.trim();
-            let live = 0, die = 0;
+        async function startEngine() {
+            const lines = document.getElementById('num_list').value.split('\n').filter(x => x.trim() !== "");
+            document.getElementById('cnt_total').innerText = lines.length;
             const logBox = document.getElementById('logs');
+            let live = 0, die = 0, cap = 0;
 
-            logBox.innerHTML += `<div>> Starting Attack on ${numbers.length} numbers...</div>`;
-
-            for (let num of numbers) {
-                logBox.innerHTML += `<div>> Checking: ${num}...</div>`;
+            for (let phone of lines) {
+                const now = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
+                logBox.innerHTML += `<div class="log-entry"><span class="time">[${now}]</span> ⚙️ PROCESSING: ${phone}</div>`;
                 logBox.scrollTop = logBox.scrollHeight;
 
                 try {
-                    const response = await fetch('/check', {
+                    const res = await fetch('/check', {
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({phone: num.trim(), proxy: proxy})
+                        body: JSON.stringify({phone: phone.trim()})
                     });
-                    const result = await response.json();
+                    const data = await res.json();
 
-                    if (result.status === 'LIVE') {
-                        live++; document.getElementById('live_count').innerText = live;
-                        logBox.innerHTML += `<div class="live">> [SUCCESS] ${num} - OTP SENT! ✅</div>`;
+                    if (data.status === 'LIVE') {
+                        live++; document.getElementById('cnt_live').innerText = live;
+                        logBox.innerHTML += `<div class="log-entry"><span class="time">[${now}]</span> <span class="status-ok">✅ CODE SEND: ${phone}</span></div>`;
+                    } else if (data.status === 'CP/LOCK') {
+                        cap++; document.getElementById('cnt_cap').innerText = cap;
+                        logBox.innerHTML += `<div class="log-entry"><span class="time">[${now}]</span> <span class="captcha">⚠️ CAPTCHA/LOCK: ${phone}</span></div>`;
                     } else {
-                        die++; document.getElementById('die_count').innerText = die;
-                        logBox.innerHTML += `<div class="die">> [FAILED] ${num} - Dead ❌</div>`;
+                        die++; document.getElementById('cnt_die').innerText = die;
+                        logBox.innerHTML += `<div class="log-entry"><span class="time">[${now}]</span> <span class="status-fail">🔴 NO ACC: ${phone}</span></div>`;
                     }
                 } catch (e) {
-                    logBox.innerHTML += `<div class="die">> [ERROR] Connection Failed</div>`;
+                    logBox.innerHTML += `<div class="log-entry"><span class="status-fail">❌ CONNECTION ERROR</span></div>`;
                 }
+                logBox.scrollTop = logBox.scrollHeight;
+                await new Promise(r => setTimeout(r, 1000)); // Rate limit protection
             }
-            logBox.innerHTML += `<div>> Attack Finished.</div>`;
         }
     </script>
 </body>
-    </html>
+</html>
