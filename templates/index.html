@@ -5,120 +5,131 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Advance Tools V6.0 PRO</title>
     <style>
-        :root { --main-green: #2ecc71; --bg-light: #f8f9fa; }
-        body { font-family: sans-serif; background: var(--bg-light); margin: 0; padding: 15px; color: #333; }
-        .container { max-width: 500px; margin: auto; background: white; border-radius: 35px; padding: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); min-height: 90vh; }
+        :root { --main-green: #2ecc71; --bg-gray: #f8f9fa; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 10px; }
+        .app-card { max-width: 450px; margin: auto; background: white; border-radius: 40px; padding: 25px; min-height: 90vh; }
         
-        /* Header Tabs */
-        .header-logo { text-align: center; margin-bottom: 25px; }
-        .logo-txt { font-size: 30px; font-weight: bold; color: var(--main-green); }
-        .tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; }
-        .tab-btn { flex: 1; padding: 12px; border-radius: 15px; border: 1px solid #eee; background: white; font-weight: bold; cursor: pointer; color: #7f8c8d; }
-        .tab-btn.active { background: var(--main-green); color: white; border-color: var(--main-green); }
-        .support-btn { background: white; border: 2px solid var(--main-green); color: var(--main-green); width: 150px; margin: 10px auto; display: block; padding: 8px; border-radius: 50px; font-weight: bold; cursor: pointer; text-decoration: none; text-align: center; font-size: 13px; }
+        /* Navigation */
+        .nav-tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; }
+        .tab { padding: 12px 25px; border-radius: 15px; border: 1px solid #eee; background: white; font-weight: bold; cursor: pointer; color: #7f8c8d; flex: 1; }
+        .tab.active { background: var(--main-green); color: white; border: none; box-shadow: 0 4px 15px rgba(46,204,113,0.3); }
 
-        /* Dashboard View */
-        .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-        .scard { background: white; border: 1.5px solid #f8f9fa; padding: 20px; border-radius: 25px; text-align: center; }
-        .sval { font-size: 28px; font-weight: bold; display: block; }
-        .slab { font-size: 10px; color: #bdc3c7; font-weight: bold; text-transform: uppercase; }
-        textarea { width: 100%; border: 1.5px solid #f4f7f6; border-radius: 20px; padding: 15px; height: 160px; box-sizing: border-box; font-family: monospace; margin-bottom: 20px; outline: none; }
+        /* Dashboard Stats (Zeroed) */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .stat-box { background: #fff; border: 1px solid #f0f0f0; border-radius: 20px; padding: 15px; text-align: center; }
+        .stat-val { display: block; font-size: 26px; font-weight: bold; }
 
-        /* Settings View Core Configuration */
-        .core-config-header { text-align: center; margin-bottom: 30px; }
-        .core-config-header h2 { font-size: 24px; color: #2c3e50; margin: 0; }
-        .core-config-header p { font-size: 10px; color: #bdc3c7; letter-spacing: 2px; }
+        /* Settings View */
+        .engine-container { background: #fff; border: 1px solid #f0f0f0; border-radius: 25px; padding: 20px; margin-top: 15px; }
+        .engine-row { display: flex; justify-content: space-between; align-items: center; }
+        .status-badge { background: #eef2f7; color: #3498db; padding: 8px 12px; border-radius: 10px; font-size: 10px; font-weight: bold; display: none; }
         
-        .config-card { background: #fff; border: 1px solid #f0f0f0; border-radius: 25px; padding: 20px; margin-bottom: 20px; }
-        .config-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .config-title { font-weight: bold; font-size: 14px; color: #2c3e50; text-transform: uppercase; }
-        .config-val { color: var(--main-green); font-weight: bold; font-size: 22px; }
-        
-        /* Slider */
-        input[type="range"] { width: 100%; height: 6px; background: #e0e0e0; border-radius: 5px; accent-color: var(--main-green); outline: none; }
-        
-        /* Proxy Pool Engine */
-        .engine-status { padding: 5px 15px; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; border: none; }
-        .btn-off { background: #eee; color: #7f8c8d; }
+        .toggle-btn { padding: 8px 20px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-off { background: #edeff2; color: #a0a5ab; }
         .btn-active { background: var(--main-green); color: white; }
-        
-        /* Proxy Type Selector */
-        .p-type-select { width: 100%; padding: 12px; border: 1px solid #eee; border-radius: 12px; margin: 15px 0; font-weight: bold; cursor: pointer; background: #f9f9f9; color: #3498db; }
-        .proxy-list-box { background: #ececec; border-radius: 15px; padding: 15px; height: 120px; width: 100%; border: none; font-size: 11px; }
 
-        .btn-main { width: 100%; padding: 18px; border-radius: 50px; border: none; background: var(--main-green); color: white; font-weight: bold; font-size: 16px; cursor: pointer; }
+        /* Hidden Proxy Section */
+        #proxy-options { display: none; margin-top: 15px; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .p-select { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #f0f0f0; background: #f9f9f9; color: #3498db; font-weight: bold; margin-bottom: 10px; outline: none; }
+        .p-box { width: 100%; background: #edeff2; border: none; border-radius: 15px; padding: 15px; height: 100px; font-size: 11px; color: #7f8c8d; font-family: monospace; box-sizing: border-box; }
+        
+        textarea { width: 100%; border: 1px solid #f0f0f0; border-radius: 20px; padding: 15px; height: 150px; box-sizing: border-box; margin-bottom: 15px; outline: none; }
+        .btn-start { width: 100%; background: var(--main-green); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: bold; font-size: 16px; cursor: pointer; }
         .hidden { display: none; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header-logo"><div class="logo-txt">AdvanCE ToolS</div></div>
+<div class="app-card">
+    <div style="text-align:center; margin-bottom:20px;"><h2 style="color:var(--main-green); margin:0;">AdvanCE ToolS</h2></div>
 
-    <div class="tabs">
-        <button class="tab-btn active" id="tab-d" onclick="setTab('dash')">DASHBOARD</button>
-        <button class="tab-btn" id="tab-s" onclick="setTab('set')">SETTINGS</button>
-    </div>
-    <a href="https://t.me/shakilkhan909090" class="support-btn">SUPPORT</a>
-
-    <div id="v-dash">
-        <div class="stats">
-            <div class="scard"><span class="sval" style="color:var(--main-green)" id="l">13</span><span class="slab">CODE SEND</span></div>
-            <div class="scard"><span class="sval" style="color:#e74c3c" id="d">74</span><span class="slab">NO ACC</span></div>
-            <div class="scard"><span class="sval" style="color:#f1c40f" id="c">13</span><span class="slab">CAPTCHA</span></div>
-            <div class="scard"><span class="sval" style="color:#3498db" id="t">100</span><span class="slab">TOTAL</span></div>
-        </div>
-        <textarea placeholder="212638358940..."></textarea>
-        <button class="btn-main">BN START</button>
+    <div class="nav-tabs">
+        <button class="tab active" id="d-btn" onclick="tab('dash')">DASHBOARD</button>
+        <button class="tab" id="s-btn" onclick="tab('set')">SETTINGS</button>
     </div>
 
-    <div id="v-set" class="hidden">
-        <div class="core-config-header">
-            <h2>CORE CONFIGURATION</h2>
-            <p>OPTIMIZE ENGINE FOR TARGET WORKLOAD</p>
+    <div id="dash-v">
+        <div class="stats-grid">
+            <div class="stat-box"><span class="stat-val" style="color:var(--main-green)" id="l_c">0</span><small>CODE SEND</small></div>
+            <div class="stat-box"><span class="stat-val" style="color:#e74c3c" id="d_c">0</span><small>NO ACC</small></div>
+            <div class="stat-box"><span class="stat-val" style="color:#f1c40f" id="c_c">0</span><small>CAPTCHA</small></div>
+            <div class="stat-box"><span class="stat-val" style="color:#3498db" id="t_c">0</span><small>TOTAL</small></div>
+        </div>
+        <textarea id="num_input" placeholder="Enter Target Numbers..."></textarea>
+        <button class="btn-start" onclick="start()">BN START</button>
+    </div>
+
+    <div id="set-v" class="hidden">
+        <div style="text-align:center; margin-bottom:20px;">
+            <h3 style="margin:0;">CORE CONFIGURATION</h3>
+            <p style="font-size:9px; color:#bdc3c7;">OPTIMIZE ENGINE FOR TARGET WORKLOAD</p>
         </div>
 
-        <div class="config-card">
-            <div class="config-row">
-                <div><span class="config-title">Parallel Threads</span><br><small style="font-size: 8px; color: #bdc3c7;">WORKLOAD INTENSITY</small></div>
-                <span class="config-val" id="thread-val">20</span>
+        <div class="engine-container">
+            <div class="engine-row">
+                <div><b>PARALLEL THREADS</b><br><small style="color:#bdc3c7; font-size:8px;">WORKLOAD INTENSITY</small></div>
+                <span id="t-num" style="color:var(--main-green); font-weight:bold; font-size:20px;">20</span>
             </div>
-            <input type="range" min="1" max="20" value="20" oninput="document.getElementById('thread-val').innerText = this.value">
+            <input type="range" min="1" max="20" value="20" style="width:100%; accent-color:var(--main-green);" oninput="document.getElementById('t-num').innerText=this.value">
         </div>
 
-        <div class="config-card">
-            <div class="config-row">
-                <div><span class="config-title" style="color: var(--main-green);">Proxy Pool Engine</span><br><small style="font-size: 8px; color: #bdc3c7;">SUPPORTS IP ROTATION</small></div>
-                <button class="engine-status btn-off" id="eng-btn" onclick="toggleEngine()">OFF</button>
+        <div class="engine-container">
+            <div class="engine-row">
+                <div><b style="color:var(--main-green);">PROXY POOL ENGINE</b><br><small style="color:#bdc3c7; font-size:8px;">SUPPORTS IP ROTATION</small></div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div class="status-badge" id="p-badge">0<span>LOADED</span></div>
+                    <button class="toggle-btn btn-off" id="p-tgl" onclick="toggleP()">OFF</button>
+                </div>
             </div>
-            
-            <select class="p-type-select" id="p-type">
-                <option value="http">HTTP</option>
-                <option value="socks5">SOCKS5</option>
-            </select>
 
-            <textarea class="proxy-list-box" placeholder="Paste proxy list here...&#10;192.168.1.1:8080&#10;10.0.0.1:3128:user:pass"></textarea>
+            <div id="proxy-options">
+                <select class="p-select">
+                    <option>HTTP</option>
+                    <option>SOCKS5</option>
+                </select>
+                <textarea class="p-box" placeholder="Paste proxy list here..."></textarea>
+            </div>
         </div>
-        
-        <button class="btn-main">SAVE CONFIG</button>
+    </div>
+    
+    <div style="text-align:center; margin-top:30px;">
+        <a href="https://t.me/shakilkhan909090" style="text-decoration:none; color:var(--main-green); font-weight:bold; border:1px solid #eee; padding:10px 25px; border-radius:50px; font-size:12px;">SUPPORT</a>
     </div>
 </div>
 
 <script>
-    function setTab(t) {
-        document.getElementById('v-dash').classList.toggle('hidden', t !== 'dash');
-        document.getElementById('v-set').classList.toggle('hidden', t !== 'set');
-        document.getElementById('tab-d').classList.toggle('active', t === 'dash');
-        document.getElementById('tab-s').classList.toggle('active', t === 'set');
+    function tab(t) {
+        document.getElementById('dash-v').classList.toggle('hidden', t!=='dash');
+        document.getElementById('set-v').classList.toggle('hidden', t!=='set');
+        document.getElementById('d-btn').classList.toggle('active', t==='dash');
+        document.getElementById('s-btn').classList.toggle('active', t==='set');
     }
 
-    function toggleEngine() {
-        const btn = document.getElementById('eng-btn');
-        const isActive = btn.classList.contains('btn-active');
-        btn.innerText = isActive ? "OFF" : "ACTIVE";
-        btn.classList.toggle('btn-active', !isActive);
-        btn.classList.toggle('btn-off', isActive);
+    function toggleP() {
+        const btn = document.getElementById('p-tgl');
+        const options = document.getElementById('proxy-options');
+        const badge = document.getElementById('p-badge');
+        
+        if(btn.classList.contains('btn-off')) {
+            btn.innerText = "ACTIVE";
+            btn.className = "toggle-btn btn-active";
+            options.style.display = "block"; // Show Box & Select
+            badge.style.display = "block";
+        } else {
+            btn.innerText = "OFF";
+            btn.className = "toggle-btn btn-off";
+            options.style.display = "none"; // Hide Box & Select
+            badge.style.display = "none";
+        }
+    }
+
+    async function start() {
+        const lines = document.getElementById('num_input').value.split('\n').filter(x => x.trim() !== "");
+        document.getElementById('t_c').innerText = lines.length;
+        // রিয়েল চেকিং লজিক এখানে চলবে...
     }
 </script>
 </body>
-    </html>
+            </html>
