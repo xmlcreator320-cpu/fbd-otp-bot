@@ -3,125 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BishalToolsPro V6.0</title>
+    <title>AkashToolsPro V6.0 PRO</title>
     <style>
-        :root { --main-green: #2ecc71; --dark-bg: #0f1012; --card-bg: #1a1c1e; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 10px; color: #333; }
-        .app-card { max-width: 480px; margin: auto; background: white; border-radius: 40px; padding: 25px; min-height: 95vh; box-shadow: 0 10px 40px rgba(0,0,0,0.05); }
+        :root { --main-green: #2ecc71; --dark-bg: #0f1012; --card-bg: #151719; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 10px; }
+        .app-container { max-width: 450px; margin: auto; background: white; border-radius: 40px; padding: 25px; min-height: 95vh; box-shadow: 0 10px 40px rgba(0,0,0,0.05); }
+
+        /* Login Card - Based on Screenshot_20260114-092003.png */
+        .auth-card { background: var(--dark-bg); color: white; border-radius: 60px; padding: 40px 25px; text-align: center; margin-top: 20px; }
+        .hwid-field { background: #1a1c1e; border: 1px solid #222; border-radius: 18px; padding: 15px; margin: 25px 0 15px; display: flex; justify-content: space-between; align-items: center; }
+        .input-field { width: 100%; background: #1a1c1e; border: 1px solid #222; padding: 18px; border-radius: 18px; color: white; margin-bottom: 25px; box-sizing: border-box; text-align: center; font-size: 14px; outline: none; }
         
-        /* Auth Screen */
-        .auth-screen { background: var(--dark-bg); color: white; border-radius: 35px; padding: 30px; text-align: center; }
-        .hwid-box { background: #131517; border-radius: 15px; padding: 15px; margin: 20px 0; display: flex; justify-content: space-between; align-items: center; border: 1px solid #222; }
-        .auth-input { width: 100%; background: #131517; border: 1px solid #222; padding: 15px; border-radius: 15px; color: white; margin-bottom: 20px; box-sizing: border-box; }
+        .btn-activate { width: 100%; background: #2c3e50; color: white; border: none; padding: 20px; border-radius: 20px; font-weight: bold; font-size: 16px; cursor: pointer; text-transform: uppercase; }
+        .get-key-link { display: block; margin-top: 25px; color: #555; font-size: 11px; text-decoration: none; }
+        .get-key-link span { color: var(--main-green); }
 
-        /* Dashboard & Stats */
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-        .stat-box { background: #fff; border: 1.5px solid #f8f9fa; padding: 18px; border-radius: 20px; text-align: center; }
-        .stat-val { display: block; font-size: 26px; font-weight: bold; }
-        .stat-label { font-size: 10px; color: #bdc3c7; font-weight: bold; text-transform: uppercase; }
-
-        /* Settings & Configuration */
-        .config-card { background: #fff; border: 1px solid #f0f0f0; border-radius: 25px; padding: 20px; margin-top: 15px; }
-        .toggle-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .toggle-btn { padding: 8px 20px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; transition: 0.3s; background: #edeff2; color: #a0a5ab; }
-        .active-btn { background: var(--main-green) !important; color: white !important; }
-
-        /* Live Process Log */
+        /* Dashboard UI - Based on Screenshot_20260113-174821.jpg */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .stat-box { background: #fff; border: 1.5px solid #f8f9fa; padding: 15px; border-radius: 20px; text-align: center; }
+        .stat-val { display: block; font-size: 24px; font-weight: bold; color: var(--main-green); }
+        .stat-label { font-size: 9px; color: #bdc3c7; font-weight: bold; }
+        
         .log-panel { background: #fff; border: 1px solid #f0f0f0; border-radius: 25px; padding: 20px; margin-top: 20px; }
-        .log-content { height: 180px; overflow-y: auto; font-size: 11px; font-family: monospace; }
-
-        .main-btn { width: 100%; background: var(--main-green); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 10px; }
-        .hidden { display: none; }
+        .log-content { height: 180px; overflow-y: auto; font-size: 11px; font-family: monospace; line-height: 1.6; }
+        
+        .btn-main { width: 100%; background: var(--main-green); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: bold; cursor: pointer; }
+        .nav-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab { flex: 1; padding: 12px; border-radius: 15px; border: 1px solid #eee; background: white; cursor: pointer; font-weight: bold; color: #7f8c8d; text-align: center; }
+        .tab.active { background: var(--main-green); color: white; border: none; }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-<div class="app-card">
-    <div id="auth-view" class="auth-screen">
-        <h2 style="color:var(--main-green); margin-bottom:5px;">BishalToolsPro</h2>
-        <p style="font-size:10px; color:#e74c3c; letter-spacing:1px;">SECURE AUTHENTICATION LAYER</p>
-        
-        <div style="text-align:left; font-size:10px; color:#555; margin-top:30px;">STATION_HWID</div>
-        <div class="hwid-box">
-            <span id="hwid-val" style="color:var(--main-green); font-family:monospace;">576D8B73AD36</span>
-            <button onclick="copyHWID()" style="background:none; border:none; color:#555; font-weight:bold; cursor:pointer;">COPY</button>
-        </div>
-
-        <input type="text" class="auth-input" placeholder="LICENSE KEY (PRO-XXXX-XXXX)">
-        <button class="main-btn" style="background:#2c3e50;" onclick="activateTool()">ACTIVATE_KERNEL</button>
-        <p style="font-size:10px; color:#555; margin-top:20px;">GET KEY: <span style="color:var(--main-green)">@bishaltoolsadmin</span></p>
-    </div>
-
-    <div id="main-dashboard" class="hidden">
-        <div class="nav-tabs" style="display:flex; gap:10px; margin-bottom:20px;">
-            <button class="toggle-btn active-btn" style="flex:1" onclick="switchView('dash')">DASHBOARD</button>
-            <button class="toggle-btn" style="flex:1" id="set-tab" onclick="switchView('set')">SETTINGS</button>
-        </div>
-
-        <div id="dash-view">
-            <div class="stats-grid">
-                <div class="stat-box"><span class="stat-val" style="color:var(--main-green)" id="suc-c">0</span><span class="stat-label">SENT_ACK</span></div>
-                <div class="stat-box"><span class="stat-val" style="color:#e74c3c" id="err-c">0</span><span class="stat-label">NOT_SENT</span></div>
-                <div class="stat-box"><span class="stat-val" style="color:#3498db" id="load-c">0</span><span class="stat-label">LOADED_NODES</span></div>
-                <div class="stat-box"><span class="stat-val" style="color:#9b59b6" id="etr-val">00:00</span><span class="stat-label">ETR (TIME)</span></div>
+<div class="app-container">
+    
+    <div id="auth-view">
+        <div class="auth-card">
+            <h1 style="color:var(--main-green); margin:0; font-size: 32px;">AkashToolsPro</h1>
+            <p style="color:#e74c3c; font-size:10px; font-weight:bold; margin-top:5px; letter-spacing: 1px;">SECURE AUTHENTICATION LAYER</p>
+            
+            <div style="text-align:left; font-size:10px; color:#555; margin-left: 10px;">STATION_HWID</div>
+            <div class="hwid-field">
+                <span id="hwid-display" style="color:var(--main-green); font-family:monospace; font-weight:bold;">AKASH-LOADING...</span>
+                <span onclick="copyHWID()" style="color:#555; font-size: 12px; cursor:pointer; font-weight:bold;">COPY</span>
             </div>
 
-            <textarea id="num-input" placeholder="Paste numbers or load file..."></textarea>
-            <button class="main-btn" onclick="startProcess()">INITIATE_BREACH</button>
+            <input type="text" id="license-key" class="input-field" placeholder="LICENSE KEY (AKASH-YYYYMMDD-HWID)">
+            <button class="btn-activate" onclick="validate()">ACTIVATE_KERNEL</button>
+            
+            <a href="https://t.me/shakilkhan909090" target="_blank" class="get-key-link">
+                GET KEY: <span>@shakilkhan909090</span>
+            </a>
+            <p id="msg" style="color:#e74c3c; font-size:11px; margin-top:15px;"></p>
+        </div>
+    </div>
+
+    <div id="main-view" class="hidden">
+        <div style="text-align:center; margin-bottom:15px;">
+            <h2 style="color:var(--main-green); margin:0;">AkashToolsPro</h2>
+            <div id="exp-tag" style="font-size:10px; color:#e74c3c; font-weight:bold;"></div>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="tab active" id="d-btn" onclick="switchTab('d')">DASHBOARD</button>
+            <button class="tab" id="s-btn" onclick="switchTab('s')">SETTINGS</button>
+        </div>
+
+        <div id="dash-part">
+            <div class="stats-grid">
+                <div class="stat-box"><span class="stat-val" id="sent_c">0</span><span class="stat-label">SENT_ACK</span></div>
+                <div class="stat-box"><span class="stat-val" style="color:#e74c3c">0</span><span class="stat-label">NOT_SENT</span></div>
+                <div class="stat-box"><span class="stat-val" style="color:#3498db" id="load_c">0</span><span class="stat-label">LOADED_NODES</span></div>
+                <div class="stat-box"><span class="stat-val" style="color:#9b59b6">00:00</span><span class="stat-label">ETR (TIME)</span></div>
+            </div>
+            <textarea id="numbers" style="width:100%; height:120px; border-radius:20px; padding:15px; border:1px solid #f0f0f0; outline:none;" placeholder="Enter Numbers..." oninput="updateCount()"></textarea>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px;">
+                <button class="btn-main" onclick="run()">START</button>
+                <button class="btn-main" style="background:#fff; color:#e74c3c; border:1px solid #f9d5d5;" onclick="stop()">STOP</button>
+            </div>
 
             <div class="log-panel">
-                <div style="color:var(--main-green); font-weight:bold; font-size:12px; margin-bottom:10px;">● LIVE OPERATION LOG</div>
-                <div class="log-content" id="live-log"></div>
+                <div style="color:var(--main-green); font-weight:bold; font-size:11px; margin-bottom:10px;">● LIVE KERNEL LOG</div>
+                <div class="log-content" id="log-box"></div>
             </div>
         </div>
 
-        <div id="set-view" class="hidden">
-            <div class="config-card">
-                <div class="toggle-row">
-                    <div><b>THREAD_VELOCITY</b><br><small style="font-size:8px; color:#ccc;">WORKLOAD INTENSITY (1-50)</small></div>
-                    <span id="t-num" style="color:var(--main-green); font-size:20px; font-weight:bold;">10</span>
-                </div>
-                <input type="range" min="1" max="50" value="10" style="width:100%; accent-color:var(--main-green);" oninput="document.getElementById('t-num').innerText=this.value">
+        <div id="set-part" class="hidden">
+            <div class="stat-box" style="text-align:left; margin-bottom:15px;">
+                <div style="display:flex; justify-content:space-between;"><b>THREAD_VELOCITY</b><span id="tv" style="color:var(--main-green);">10</span></div>
+                <input type="range" min="1" max="50" value="10" style="width:100%; accent-color:var(--main-green);" oninput="document.getElementById('tv').innerText=this.value">
             </div>
-
-            <div class="config-card">
-                <div class="toggle-row"><span>GHOST_MODE (Headless)</span><button class="toggle-btn" onclick="this.classList.toggle('active-btn')">OFF</button></div>
-                <div class="toggle-row"><span>HUMAN_SIMULATION</span><button class="toggle-btn active-btn" onclick="this.classList.toggle('active-btn')">ON</button></div>
-                <div class="toggle-row">
-                    <span style="color:var(--main-green); font-weight:bold;">PROXY POOL ENGINE</span>
-                    <button class="toggle-btn" id="p-tgl" onclick="toggleProxy()">OFF</button>
-                </div>
-                <div id="p-box" class="hidden" style="margin-top:10px;">
-                    <textarea style="height:80px; font-size:10px;" placeholder="Paste Proxy List..."></textarea>
-                </div>
-            </div>
+            <p style="font-size:11px; color:#bdc3c7; text-align:center;">Additional kernel configurations are active in background.</p>
         </div>
     </div>
+
 </div>
 
 <script>
-    function copyHWID() { alert("HWID Copied: 576D8B73AD36"); }
-    function activateTool() { 
-        document.getElementById('auth-view').classList.add('hidden');
-        document.getElementById('main-dashboard').classList.remove('hidden');
+    // HWID Logic
+    function generateHWID() {
+        let id = localStorage.getItem('akash_id');
+        if (!id) {
+            id = Math.random().toString(36).substr(2, 6).toUpperCase();
+            localStorage.setItem('akash_id', id);
+        }
+        return id;
     }
-    function switchView(v) {
-        document.getElementById('dash-view').classList.toggle('hidden', v!=='dash');
-        document.getElementById('set-view').classList.toggle('hidden', v!=='set');
+    const myHWID = generateHWID();
+    document.getElementById('hwid-display').innerText = "AKASH-" + myHWID;
+
+    function copyHWID() {
+        navigator.clipboard.writeText("AKASH-" + myHWID);
+        alert("HWID Copied!");
     }
-    function toggleProxy() {
-        const btn = document.getElementById('p-tgl');
-        const box = document.getElementById('p-box');
-        const isActive = btn.innerText === "OFF";
-        btn.innerText = isActive ? "ACTIVE" : "OFF";
-        btn.classList.toggle('active-btn', isActive);
-        box.classList.toggle('hidden', !isActive);
+
+    // Key Validation (Format: AKASH-YYYYMMDD-HWID)
+    function validate() {
+        const key = document.getElementById('license-key').value.trim();
+        const msg = document.getElementById('msg');
+        
+        try {
+            const parts = key.split('-');
+            if (parts.length !== 3 || parts[0] !== "AKASH") throw "Invalid";
+
+            const expiryStr = parts[1];
+            const keyHWID = parts[2];
+
+            if (keyHWID !== myID && keyHWID !== myHWID) {
+                msg.innerText = "❌ Key locked to another HWID!";
+                return;
+            }
+
+            const y = expiryStr.substring(0,4), m = expiryStr.substring(4,6), d = expiryStr.substring(6,8);
+            const expiryDate = new Date(`${y}-${m}-${d}`);
+            
+            if (expiryDate < new Date()) {
+                msg.innerText = "❌ This License Key has Expired!";
+            } else {
+                document.getElementById('auth-view').classList.add('hidden');
+                document.getElementById('main-view').classList.remove('hidden');
+                document.getElementById('exp-tag').innerText = "EXPIRES: " + expiryDate.toDateString();
+            }
+        } catch(e) {
+            msg.innerText = "❌ Invalid Key Format!";
+        }
     }
-    function startProcess() {
-        const log = document.getElementById('live-log');
-        log.innerHTML += `<div style="color:#2ecc71; margin-bottom:5px;">[${new Date().toLocaleTimeString()}] INITIATING SYSTEM BREACH...</div>`;
-        // রিয়েল মেকানিজম এখানে কাজ করবে
+
+    function switchTab(v) {
+        document.getElementById('dash-part').classList.toggle('hidden', v==='s');
+        document.getElementById('set-part').classList.toggle('hidden', v==='d');
+        document.getElementById('d-btn').classList.toggle('active', v==='d');
+        document.getElementById('s-btn').classList.toggle('active', v==='s');
+    }
+
+    function updateCount() {
+        const lines = document.getElementById('numbers').value.split('\n').filter(n => n.trim() !== "");
+        document.getElementById('load_c').innerText = lines.length;
+    }
+
+    function run() {
+        const log = document.getElementById('log-box');
+        log.innerHTML += `<div style="margin-bottom:5px;">[${new Date().toLocaleTimeString()}] <span style="color:#2ecc71;">INITIATING_BREACH...</span></div>`;
+        log.scrollTop = log.scrollHeight;
+    }
+
+    function stop() {
+        const log = document.getElementById('log-box');
+        log.innerHTML += `<div style="margin-bottom:5px;">[${new Date().toLocaleTimeString()}] <span style="color:#e74c3c;">SESSION_STOPPED.</span></div>`;
     }
 </script>
 </body>
-            </html>
+                </html>
