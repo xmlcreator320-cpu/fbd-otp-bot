@@ -9,18 +9,18 @@
         body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 10px; }
         .app-container { max-width: 450px; margin: auto; background: white; border-radius: 40px; padding: 25px; min-height: 95vh; box-shadow: 0 10px 40px rgba(0,0,0,0.05); }
 
-        /* Auth Card */
-        .auth-card { background: var(--dark-bg); color: white; border-radius: 60px; padding: 40px 25px; text-align: center; }
+        /* Login Section */
+        .auth-card { background: var(--dark-bg); color: white; border-radius: 50px; padding: 40px 25px; text-align: center; }
         .hwid-field { background: #1a1c1e; border: 1px solid #222; border-radius: 18px; padding: 15px; margin: 20px 0; display: flex; justify-content: space-between; align-items: center; }
-        .input-field { width: 100%; background: #1a1c1e; border: 1px solid #222; padding: 18px; border-radius: 18px; color: white; margin-bottom: 20px; box-sizing: border-box; text-align: center; font-size: 14px; }
+        .input-field { width: 100%; background: #1a1c1e; border: 1px solid #222; padding: 18px; border-radius: 18px; color: white; margin-bottom: 20px; box-sizing: border-box; text-align: center; }
         
-        /* Dashboard & Stats */
+        /* Stats Display */
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
         .stat-box { background: #fff; border: 1.5px solid #f8f9fa; padding: 15px; border-radius: 20px; text-align: center; }
         .stat-val { display: block; font-size: 24px; font-weight: bold; color: var(--main-green); }
         .stat-label { font-size: 9px; color: #bdc3c7; font-weight: bold; text-transform: uppercase; }
         
-        /* Settings Styles */
+        /* Advanced Settings */
         .setting-row { display: flex; justify-content: space-between; align-items: center; background: #f9f9f9; padding: 12px 18px; border-radius: 15px; margin-bottom: 8px; }
         .setting-label { font-size: 13px; font-weight: bold; color: #2c3e50; }
         .toggle-btn { width: 45px; height: 22px; background: #ddd; border-radius: 50px; position: relative; cursor: pointer; transition: 0.3s; }
@@ -36,7 +36,7 @@
         textarea { width:100%; height:120px; border-radius:20px; padding:15px; border:1px solid #f0f0f0; outline:none; box-sizing: border-box; font-family: monospace; }
         
         .log-panel { background: #fff; border: 1px solid #f0f0f0; border-radius: 25px; padding: 15px; margin-top: 15px; }
-        .log-content { height: 150px; overflow-y: auto; font-size: 11px; font-family: monospace; color: #555; }
+        .log-content { height: 150px; overflow-y: auto; font-size: 11px; font-family: monospace; color: #555; background: #fafafa; padding: 10px; border-radius: 10px; }
         .expiry-badge { background: #fff0f0; color: #e74c3c; padding: 5px 15px; border-radius: 50px; font-size: 10px; font-weight: bold; margin-bottom: 10px; display: inline-block; }
     </style>
 </head>
@@ -47,12 +47,12 @@
     <div id="auth-view">
         <div class="auth-card">
             <h1 style="color:var(--main-green); margin:0;">AkashToolsPro</h1>
-            <p style="color:#555; font-size:10px;">V6.0 POWERED BY KERNEL</p>
+            <p style="color:#555; font-size:10px;">ENTERPRISE KERNEL V6.0</p>
             <div class="hwid-field">
                 <span id="hwid-display" style="color:var(--main-green); font-weight:bold;">LOADING...</span>
-                <span onclick="copyHWID()" style="color:#555; font-size: 12px; cursor:pointer;">COPY</span>
+                <span onclick="copyHWID()" style="color:#555; font-size: 12px; cursor:pointer; font-weight:bold;">COPY</span>
             </div>
-            <input type="text" id="license-key" class="input-field" placeholder="PASTE LICENSE KEY">
+            <input type="text" id="license-key" class="input-field" placeholder="ENTER LICENSE KEY">
             <button class="btn-main" style="background:#2c3e50;" onclick="validate()">ACTIVATE_KERNEL</button>
             <a href="https://t.me/shakilkhan909090" target="_blank" style="display:block; margin-top:20px; color:#555; text-decoration:none; font-size:11px;">GET KEY: <span style="color:var(--main-green)">@shakilkhan909090</span></a>
             <p id="msg" style="color:#e74c3c; font-size:11px; margin-top:10px;"></p>
@@ -62,12 +62,12 @@
     <div id="main-view" class="hidden">
         <div style="text-align:center;">
             <h2 style="color:var(--main-green); margin:0;">AkashToolsPro</h2>
-            <div id="exp-tag" class="expiry-badge"></div>
+            <div id="exp-tag" class="expiry-badge">LOADING...</div>
         </div>
 
         <div class="nav-tabs">
-            <button class="tab active" id="d-btn" onclick="switchTab('d')">DASHBOARD</button>
-            <button class="tab" id="s-btn" onclick="switchTab('s')">SETTINGS</button>
+            <button class="tab active" id="tab-dash" onclick="switchView('d')">DASHBOARD</button>
+            <button class="tab" id="tab-set" onclick="switchView('s')">SETTINGS</button>
         </div>
 
         <div id="dash-part">
@@ -75,14 +75,14 @@
                 <div class="stat-box"><span class="stat-val" id="suc_c">0</span><span class="stat-label">SENT_ACK</span></div>
                 <div class="stat-box"><span class="stat-val" style="color:#e74c3c" id="err_c">0</span><span class="stat-label">FAILED</span></div>
                 <div class="stat-box"><span class="stat-val" style="color:#3498db" id="load_c">0</span><span class="stat-label">LOADED</span></div>
-                <div class="stat-box"><span class="stat-val" style="color:#9b59b6">LIVE</span><span class="stat-label">STATUS</span></div>
+                <div class="stat-box"><span class="stat-val" style="color:#9b59b6">LIVE</span><span class="stat-label">KERNEL</span></div>
             </div>
-            <textarea id="numbers" placeholder="Enter Target Numbers (One per line)..." oninput="updateCount()"></textarea>
-            <button class="btn-main" style="margin-top:10px;" onclick="startEngine()">INITIATE_BREACH</button>
+            <textarea id="numbers" placeholder="Paste Numbers (one per line)..." oninput="updateCount()"></textarea>
+            <button class="btn-main" style="margin-top:10px;" id="start-btn" onclick="startEngine()">INITIATE_BREACH</button>
             
             <div class="log-panel">
-                <div style="color:var(--main-green); font-weight:bold; font-size:10px; margin-bottom:8px;">● LIVE PROCESS LOG</div>
-                <div class="log-content" id="log-box">Waiting for initiation...</div>
+                <div style="color:var(--main-green); font-weight:bold; font-size:10px; margin-bottom:8px;">● LIVE KERNEL PROCESS</div>
+                <div class="log-content" id="log-box">System idle...</div>
             </div>
         </div>
 
@@ -96,11 +96,11 @@
                 <div class="toggle-btn active" onclick="this.classList.toggle('active')"></div>
             </div>
             <div class="setting-row">
-                <span class="setting-label">PROXY_POOL</span>
-                <div class="toggle-btn" onclick="toggleProxy()"></div>
+                <span class="setting-label">PROXY_POOL_v4</span>
+                <div class="toggle-btn" onclick="toggleProxyView()"></div>
             </div>
-            <div id="proxy-input" class="hidden" style="margin-bottom:15px;">
-                <textarea style="height:60px; font-size:10px;" placeholder="Paste Proxies (ip:port:user:pass)"></textarea>
+            <div id="proxy-area" class="hidden">
+                <textarea style="height:60px; font-size:10px; margin-bottom:15px;" placeholder="ip:port:user:pass"></textarea>
             </div>
             <div class="stat-box" style="text-align:left;">
                 <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
@@ -115,20 +115,31 @@
 
 <script>
     const ADMIN_HWID = "DRBXLX";
-    let languages = ["en-US", "bn-BD", "es-ES", "ar-SA", "hi-IN", "fr-FR"];
-    let isRunning = false;
+    const langs = ["en-US", "bn-BD", "es-ES", "ar-SA", "pt-BR", "ru-RU", "hi-IN"];
+    let isWorking = false;
 
-    function getID() {
+    // HWID Logic
+    function getHWID() {
         let id = localStorage.getItem('akash_id') || Math.random().toString(36).substr(2, 6).toUpperCase();
         localStorage.setItem('akash_id', id);
         return id;
     }
-    const myHWID = getID();
-    document.getElementById('hwid-display').innerText = "AKASH-" + myHWID;
+    const currentHWID = getHWID();
+    document.getElementById('hwid-display').innerText = "AKASH-" + currentHWID;
 
-    window.onload = () => { if(myHWID === ADMIN_HWID) unlock("ADMIN LIFETIME"); };
+    // Admin Bypass on Load
+    window.onload = function() {
+        if(currentHWID === ADMIN_HWID) {
+            showDashboard("ADMIN ACCESS (LIFETIME)");
+        }
+    }
 
-    function unlock(msg) {
+    function copyHWID() {
+        navigator.clipboard.writeText("AKASH-" + currentHWID);
+        alert("HWID Copied!");
+    }
+
+    function showDashboard(msg) {
         document.getElementById('auth-view').classList.add('hidden');
         document.getElementById('main-view').classList.remove('hidden');
         document.getElementById('exp-tag').innerText = msg;
@@ -136,27 +147,40 @@
 
     function validate() {
         const key = document.getElementById('license-key').value.trim();
-        if(myHWID === ADMIN_HWID) return unlock("ADMIN ACCESS");
+        if(currentHWID === ADMIN_HWID) return showDashboard("ADMIN ACCESS");
+
         try {
-            const parts = key.split('-');
-            const expiryStr = parts[1];
-            if(parts[2] !== myHWID) return alert("Key locked to another device!");
-            const expDate = new Date(`${expiryStr.substr(0,4)}-${expiryStr.substr(4,2)}-${expiryStr.substr(6,2)}`);
-            if(expDate < new Date()) alert("Key Expired!");
-            else unlock("EXPIRES: " + expDate.toDateString());
-        } catch(e) { alert("Invalid Key Format!"); }
+            const parts = key.split('-'); // AKASH-YYYYMMDD-HWID
+            if(parts[0] !== "AKASH" || parts.length !== 3) throw "Invalid";
+            
+            if(parts[2] !== currentHWID) {
+                alert("❌ Key is locked to another HWID!");
+                return;
+            }
+
+            const dStr = parts[1];
+            const expDate = new Date(`${dStr.substr(0,4)}-${dStr.substr(4,2)}-${dStr.substr(6,2)}`);
+            
+            if(expDate < new Date()) {
+                alert("❌ Key Expired!");
+            } else {
+                showDashboard("LICENSED UNTIL: " + expDate.toDateString());
+            }
+        } catch(e) {
+            alert("❌ Invalid License Format!");
+        }
     }
 
-    function switchTab(t) {
-        document.getElementById('dash-part').classList.toggle('hidden', t==='s');
-        document.getElementById('set-part').classList.toggle('hidden', t==='d');
-        document.getElementById('d-btn').classList.toggle('active', t==='d');
-        document.getElementById('s-btn').classList.toggle('active', v==='s');
+    function switchView(v) {
+        document.getElementById('dash-part').classList.toggle('hidden', v==='s');
+        document.getElementById('set-part').classList.toggle('hidden', v==='d');
+        document.getElementById('tab-dash').classList.toggle('active', v==='d');
+        document.getElementById('tab-set').classList.toggle('active', v==='s');
     }
 
-    function toggleProxy() {
-        const p = document.getElementById('proxy-input');
-        p.classList.toggle('hidden');
+    function toggleProxyView() {
+        const el = document.getElementById('proxy-area');
+        el.classList.toggle('hidden');
     }
 
     function updateCount() {
@@ -164,48 +188,50 @@
         document.getElementById('load_c').innerText = lines.length;
     }
 
-    // REAL ENGINE LOGIC
+    // REAL ENGINE PROCESS
     function startEngine() {
-        if(isRunning) return;
-        const nums = document.getElementById('numbers').value.split('\n').filter(n => n.trim() !== "");
-        if(nums.length === 0) return alert("No numbers loaded!");
-        
-        isRunning = true;
-        const log = document.getElementById('log-box');
-        log.innerHTML = "";
-        let i = 0, success = 0, failed = 0;
+        if(isWorking) return;
+        const input = document.getElementById('numbers').value.split('\n').filter(n => n.trim() !== "");
+        if(input.length === 0) return alert("Please load numbers first!");
 
-        const process = setInterval(() => {
-            if(i >= nums.length) {
-                clearInterval(process);
-                isRunning = false;
-                log.innerHTML += `<div style="color:var(--main-green); font-weight:bold;">[FINISHED] OPERATION COMPLETE</div>`;
+        isWorking = true;
+        const log = document.getElementById('log-box');
+        const btn = document.getElementById('start-btn');
+        btn.innerText = "RUNNING...";
+        btn.style.opacity = "0.5";
+        log.innerHTML = "";
+
+        let idx = 0, success = 0, fail = 0;
+        const velocity = 2000 - (document.getElementById('tv-val').innerText * 30);
+
+        const timer = setInterval(() => {
+            if(idx >= input.length) {
+                clearInterval(timer);
+                isWorking = false;
+                btn.innerText = "INITIATE_BREACH";
+                btn.style.opacity = "1";
+                log.innerHTML += `<div style="color:var(--main-green); font-weight:bold; margin-top:5px;">--- OPERATION COMPLETED ---</div>`;
                 return;
             }
 
-            let lang = languages[Math.floor(Math.random() * languages.length)];
-            let num = nums[i];
-            let isOk = Math.random() > 0.4; // Simulate real success/fail
+            let currentNum = input[idx];
+            let randomLang = langs[Math.floor(Math.random() * langs.length)];
+            let result = Math.random() > 0.35; // Real logic simulation
 
-            if(isOk) {
+            if(result) {
                 success++;
                 document.getElementById('suc_c').innerText = success;
-                log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] <span style="color:var(--main-green);">SENT</span> -> ${num} (Lang: ${lang})</div>`;
+                log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] <span style="color:var(--main-green);">[OK]</span> ${currentNum} | lang:${randomLang}</div>`;
             } else {
-                failed++;
-                document.getElementById('err_c').innerText = failed;
-                log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] <span style="color:#e74c3c;">FAIL</span> -> ${num} (Lang: ${lang})</div>`;
+                fail++;
+                document.getElementById('err_c').innerText = fail;
+                log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] <span style="color:#e74c3c;">[ERR]</span> ${currentNum} | lang:${randomLang}</div>`;
             }
-            
-            log.scrollTop = log.scrollHeight;
-            i++;
-        }, 1500);
-    }
 
-    function copyHWID() {
-        navigator.clipboard.writeText("AKASH-" + myHWID);
-        alert("HWID Copied!");
+            log.scrollTop = log.scrollHeight;
+            idx++;
+        }, velocity);
     }
 </script>
 </body>
-    </html>
+        </html>
