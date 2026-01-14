@@ -3,40 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AkashToolsPro V6.0 PRO</title>
+    <title>AkashToolsPro V6.0</title>
     <style>
         :root { --main-green: #2ecc71; --dark-bg: #0f1012; --card-bg: #151719; }
         body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 10px; }
         .app-container { max-width: 450px; margin: auto; background: white; border-radius: 40px; padding: 25px; min-height: 95vh; box-shadow: 0 10px 40px rgba(0,0,0,0.05); }
 
-        /* Login Section */
+        /* Auth Card */
         .auth-card { background: var(--dark-bg); color: white; border-radius: 50px; padding: 40px 25px; text-align: center; }
         .hwid-field { background: #1a1c1e; border: 1px solid #222; border-radius: 18px; padding: 15px; margin: 20px 0; display: flex; justify-content: space-between; align-items: center; }
-        .input-field { width: 100%; background: #1a1c1e; border: 1px solid #222; padding: 18px; border-radius: 18px; color: white; margin-bottom: 20px; box-sizing: border-box; text-align: center; }
+        .input-field { width: 100%; background: #1a1c1e; border: 1px solid #222; padding: 18px; border-radius: 18px; color: white; margin-bottom: 20px; box-sizing: border-box; text-align: center; outline: none; }
         
-        /* Stats Display */
+        /* Stats */
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
         .stat-box { background: #fff; border: 1.5px solid #f8f9fa; padding: 15px; border-radius: 20px; text-align: center; }
         .stat-val { display: block; font-size: 24px; font-weight: bold; color: var(--main-green); }
         .stat-label { font-size: 9px; color: #bdc3c7; font-weight: bold; text-transform: uppercase; }
         
-        /* Advanced Settings */
-        .setting-row { display: flex; justify-content: space-between; align-items: center; background: #f9f9f9; padding: 12px 18px; border-radius: 15px; margin-bottom: 8px; }
-        .setting-label { font-size: 13px; font-weight: bold; color: #2c3e50; }
-        .toggle-btn { width: 45px; height: 22px; background: #ddd; border-radius: 50px; position: relative; cursor: pointer; transition: 0.3s; }
-        .toggle-btn.active { background: var(--main-green); }
-        .toggle-btn::after { content: ''; position: absolute; width: 18px; height: 18px; background: white; border-radius: 50%; top: 2px; left: 2px; transition: 0.3s; }
-        .toggle-btn.active::after { left: 25px; }
-
-        .btn-main { width: 100%; background: var(--main-green); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 16px; }
+        /* Tabs */
         .nav-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
         .tab { flex: 1; padding: 12px; border-radius: 15px; border: 1px solid #eee; background: white; cursor: pointer; font-weight: bold; color: #7f8c8d; text-align: center; }
         .tab.active { background: var(--main-green); color: white; border: none; }
         .hidden { display: none !important; }
-        textarea { width:100%; height:120px; border-radius:20px; padding:15px; border:1px solid #f0f0f0; outline:none; box-sizing: border-box; font-family: monospace; }
+
+        /* Settings Style */
+        .config-card { background: #f9f9f9; border-radius: 25px; padding: 20px; margin-bottom: 15px; }
+        .config-header { text-align: center; margin-bottom: 20px; }
+        .config-title { font-size: 22px; font-weight: bold; color: #151719; margin: 0; }
+        .config-sub { font-size: 10px; color: #bdc3c7; font-weight: bold; }
         
+        .setting-item { background: white; padding: 15px; border-radius: 20px; margin-bottom: 10px; border: 1px solid #f0f0f0; }
+        .setting-flex { display: flex; justify-content: space-between; align-items: center; }
+        
+        .toggle { width: 45px; height: 24px; background: #ddd; border-radius: 24px; position: relative; cursor: pointer; transition: 0.3s; }
+        .toggle.active { background: var(--main-green); }
+        .toggle::after { content: ''; position: absolute; width: 20px; height: 20px; background: white; border-radius: 50%; top: 2px; left: 2px; transition: 0.3s; }
+        .toggle.active::after { left: 23px; }
+
+        .btn-main { width: 100%; background: var(--main-green); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: bold; cursor: pointer; }
+        textarea { width:100%; height:120px; border-radius:20px; padding:15px; border:1px solid #f0f0f0; outline:none; box-sizing: border-box; }
         .log-panel { background: #fff; border: 1px solid #f0f0f0; border-radius: 25px; padding: 15px; margin-top: 15px; }
-        .log-content { height: 150px; overflow-y: auto; font-size: 11px; font-family: monospace; color: #555; background: #fafafa; padding: 10px; border-radius: 10px; }
+        .log-content { height: 150px; overflow-y: auto; font-size: 11px; font-family: monospace; color: #555; }
         .expiry-badge { background: #fff0f0; color: #e74c3c; padding: 5px 15px; border-radius: 50px; font-size: 10px; font-weight: bold; margin-bottom: 10px; display: inline-block; }
     </style>
 </head>
@@ -47,12 +54,12 @@
     <div id="auth-view">
         <div class="auth-card">
             <h1 style="color:var(--main-green); margin:0;">AkashToolsPro</h1>
-            <p style="color:#555; font-size:10px;">ENTERPRISE KERNEL V6.0</p>
+            <p style="color:#555; font-size:10px;">SECURE AUTHENTICATION LAYER</p>
             <div class="hwid-field">
                 <span id="hwid-display" style="color:var(--main-green); font-weight:bold;">LOADING...</span>
                 <span onclick="copyHWID()" style="color:#555; font-size: 12px; cursor:pointer; font-weight:bold;">COPY</span>
             </div>
-            <input type="text" id="license-key" class="input-field" placeholder="ENTER LICENSE KEY">
+            <input type="text" id="license-key" class="input-field" placeholder="PRO-XXXX-XXXX">
             <button class="btn-main" style="background:#2c3e50;" onclick="validate()">ACTIVATE_KERNEL</button>
             <a href="https://t.me/shakilkhan909090" target="_blank" style="display:block; margin-top:20px; color:#555; text-decoration:none; font-size:11px;">GET KEY: <span style="color:var(--main-green)">@shakilkhan909090</span></a>
             <p id="msg" style="color:#e74c3c; font-size:11px; margin-top:10px;"></p>
@@ -66,8 +73,8 @@
         </div>
 
         <div class="nav-tabs">
-            <button class="tab active" id="tab-dash" onclick="switchView('d')">DASHBOARD</button>
-            <button class="tab" id="tab-set" onclick="switchView('s')">SETTINGS</button>
+            <button class="tab active" id="tab-dash" onclick="switchTab('d')">DASHBOARD</button>
+            <button class="tab" id="tab-set" onclick="switchTab('s')">SETTINGS</button>
         </div>
 
         <div id="dash-part">
@@ -77,69 +84,81 @@
                 <div class="stat-box"><span class="stat-val" style="color:#3498db" id="load_c">0</span><span class="stat-label">LOADED</span></div>
                 <div class="stat-box"><span class="stat-val" style="color:#9b59b6">LIVE</span><span class="stat-label">KERNEL</span></div>
             </div>
-            <textarea id="numbers" placeholder="Paste Numbers (one per line)..." oninput="updateCount()"></textarea>
-            <button class="btn-main" style="margin-top:10px;" id="start-btn" onclick="startEngine()">INITIATE_BREACH</button>
-            
+            <textarea id="numbers" placeholder="Paste Numbers here..." oninput="updateCount()"></textarea>
+            <button class="btn-main" style="margin-top:10px;" onclick="startEngine()">INITIATE_BREACH</button>
             <div class="log-panel">
                 <div style="color:var(--main-green); font-weight:bold; font-size:10px; margin-bottom:8px;">● LIVE KERNEL PROCESS</div>
-                <div class="log-content" id="log-box">System idle...</div>
+                <div class="log-content" id="log-box">Waiting for initiation...</div>
             </div>
         </div>
 
         <div id="set-part" class="hidden">
-            <div class="setting-row">
-                <span class="setting-label">GHOST_MODE</span>
-                <div class="toggle-btn" onclick="this.classList.toggle('active')"></div>
+            <div class="config-header">
+                <p class="config-title">CORE CONFIGURATION</p>
+                <p class="config-sub">OPTIMIZE ENGINE FOR TARGET WORKLOAD</p>
             </div>
-            <div class="setting-row">
-                <span class="setting-label">HUMAN_SIMULATION</span>
-                <div class="toggle-btn active" onclick="this.classList.toggle('active')"></div>
-            </div>
-            <div class="setting-row">
-                <span class="setting-label">PROXY_POOL_v4</span>
-                <div class="toggle-btn" onclick="toggleProxyView()"></div>
-            </div>
-            <div id="proxy-area" class="hidden">
-                <textarea style="height:60px; font-size:10px; margin-bottom:15px;" placeholder="ip:port:user:pass"></textarea>
-            </div>
-            <div class="stat-box" style="text-align:left;">
-                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                    <span class="setting-label">THREAD_VELOCITY</span>
-                    <span id="tv-val" style="color:var(--main-green); font-weight:bold;">10</span>
+
+            <div class="setting-item">
+                <div class="setting-flex">
+                    <div>
+                        <b style="font-size:14px; color:#2c3e50;">PARALLEL THREADS</b><br>
+                        <span style="font-size:10px; color:#bdc3c7; font-weight:bold;">WORKLOAD INTENSITY</span>
+                    </div>
+                    <span id="tv-val" style="color:var(--main-green); font-size:20px; font-weight:bold;">10</span>
                 </div>
-                <input type="range" min="1" max="50" value="10" style="width:100%; accent-color:var(--main-green);" oninput="document.getElementById('tv-val').innerText=this.value">
+                <input type="range" min="1" max="20" value="10" style="width:100%; accent-color:var(--main-green); margin-top:10px;" oninput="document.getElementById('tv-val').innerText=this.value">
             </div>
+
+            <div class="setting-item">
+                <div class="setting-flex">
+                    <div>
+                        <b style="color:var(--main-green); font-size:14px;">PROXY POOL ENGINE</b><br>
+                        <span style="font-size:10px; color:#bdc3c7; font-weight:bold;">SUPPORTS IP ROTATION</span>
+                    </div>
+                    <div id="proxy-btn" class="toggle" onclick="toggleProxy()"></div>
+                </div>
+                
+                <div id="proxy-options" class="hidden" style="margin-top:15px; border-top:1px solid #f0f0f0; padding-top:15px;">
+                    <select id="proxy-type" style="width:100%; padding:10px; border-radius:10px; border:1px solid #eee; margin-bottom:10px;">
+                        <option value="http">HTTP</option>
+                        <option value="socks5">SOCKS5</option>
+                    </select>
+                    <textarea style="height:60px; font-size:10px;" placeholder="Paste proxy list here...&#10;192.168.1.1:8080&#10;10.0.0.1:3128:user:pass"></textarea>
+                </div>
+            </div>
+
+            <div class="setting-item setting-flex">
+                <b style="font-size:13px; color:#2c3e50;">STEALTH / HEADLESS</b>
+                <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+            </div>
+
+            <div class="setting-item setting-flex">
+                <b style="font-size:13px; color:#2c3e50;">DATA SAVER (TURBO)</b>
+                <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+            </div>
+            
+            <button class="btn-main" style="background:#fff; color:#e74c3c; border:1px solid #f9d5d5; font-size:12px; margin-top:10px;">DEACTIVATE ENGINE LICENSE</button>
         </div>
     </div>
 </div>
 
 <script>
     const ADMIN_HWID = "DRBXLX";
-    const langs = ["en-US", "bn-BD", "es-ES", "ar-SA", "pt-BR", "ru-RU", "hi-IN"];
-    let isWorking = false;
+    const langs = ["en-US", "bn-BD", "es-ES", "ar-SA", "pt-BR", "hi-IN"];
+    let isRunning = false;
 
-    // HWID Logic
-    function getHWID() {
+    function getID() {
         let id = localStorage.getItem('akash_id') || Math.random().toString(36).substr(2, 6).toUpperCase();
         localStorage.setItem('akash_id', id);
         return id;
     }
-    const currentHWID = getHWID();
-    document.getElementById('hwid-display').innerText = "AKASH-" + currentHWID;
+    const myHWID = getID();
+    document.getElementById('hwid-display').innerText = "AKASH-" + myHWID;
 
-    // Admin Bypass on Load
-    window.onload = function() {
-        if(currentHWID === ADMIN_HWID) {
-            showDashboard("ADMIN ACCESS (LIFETIME)");
-        }
-    }
+    // Admin Bypass
+    window.onload = () => { if(myHWID === ADMIN_HWID) unlock("ADMIN LIFETIME"); };
 
-    function copyHWID() {
-        navigator.clipboard.writeText("AKASH-" + currentHWID);
-        alert("HWID Copied!");
-    }
-
-    function showDashboard(msg) {
+    function unlock(msg) {
         document.getElementById('auth-view').classList.add('hidden');
         document.getElementById('main-view').classList.remove('hidden');
         document.getElementById('exp-tag').innerText = msg;
@@ -147,40 +166,29 @@
 
     function validate() {
         const key = document.getElementById('license-key').value.trim();
-        if(currentHWID === ADMIN_HWID) return showDashboard("ADMIN ACCESS");
-
+        if(myHWID === ADMIN_HWID) return unlock("ADMIN ACCESS");
         try {
-            const parts = key.split('-'); // AKASH-YYYYMMDD-HWID
-            if(parts[0] !== "AKASH" || parts.length !== 3) throw "Invalid";
-            
-            if(parts[2] !== currentHWID) {
-                alert("❌ Key is locked to another HWID!");
-                return;
-            }
-
-            const dStr = parts[1];
-            const expDate = new Date(`${dStr.substr(0,4)}-${dStr.substr(4,2)}-${dStr.substr(6,2)}`);
-            
-            if(expDate < new Date()) {
-                alert("❌ Key Expired!");
-            } else {
-                showDashboard("LICENSED UNTIL: " + expDate.toDateString());
-            }
-        } catch(e) {
-            alert("❌ Invalid License Format!");
-        }
+            const parts = key.split('-');
+            if(parts.length !== 3 || parts[2] !== myHWID) return alert("Invalid HWID!");
+            const d = parts[1];
+            const exp = new Date(`${d.substr(0,4)}-${d.substr(4,2)}-${d.substr(6,2)}`);
+            if(exp < new Date()) alert("Expired!");
+            else unlock("EXPIRES: " + exp.toDateString());
+        } catch(e) { alert("Format: AKASH-YYYYMMDD-HWID"); }
     }
 
-    function switchView(v) {
-        document.getElementById('dash-part').classList.toggle('hidden', v==='s');
-        document.getElementById('set-part').classList.toggle('hidden', v==='d');
-        document.getElementById('tab-dash').classList.toggle('active', v==='d');
-        document.getElementById('tab-set').classList.toggle('active', v==='s');
+    function switchTab(t) {
+        document.getElementById('dash-part').classList.toggle('hidden', t==='s');
+        document.getElementById('set-part').classList.toggle('hidden', t==='d');
+        document.getElementById('tab-dash').classList.toggle('active', t==='d');
+        document.getElementById('tab-set').classList.toggle('active', t==='s');
     }
 
-    function toggleProxyView() {
-        const el = document.getElementById('proxy-area');
-        el.classList.toggle('hidden');
+    function toggleProxy() {
+        const btn = document.getElementById('proxy-btn');
+        const area = document.getElementById('proxy-options');
+        btn.classList.toggle('active');
+        area.classList.toggle('hidden');
     }
 
     function updateCount() {
@@ -188,50 +196,35 @@
         document.getElementById('load_c').innerText = lines.length;
     }
 
-    // REAL ENGINE PROCESS
     function startEngine() {
-        if(isWorking) return;
+        if(isRunning) return;
         const input = document.getElementById('numbers').value.split('\n').filter(n => n.trim() !== "");
-        if(input.length === 0) return alert("Please load numbers first!");
-
-        isWorking = true;
+        if(input.length === 0) return alert("Load numbers!");
+        isRunning = true;
         const log = document.getElementById('log-box');
-        const btn = document.getElementById('start-btn');
-        btn.innerText = "RUNNING...";
-        btn.style.opacity = "0.5";
         log.innerHTML = "";
-
-        let idx = 0, success = 0, fail = 0;
-        const velocity = 2000 - (document.getElementById('tv-val').innerText * 30);
+        let i = 0, success = 0, fail = 0;
+        const speed = 2000 - (document.getElementById('tv-val').innerText * 50);
 
         const timer = setInterval(() => {
-            if(idx >= input.length) {
-                clearInterval(timer);
-                isWorking = false;
-                btn.innerText = "INITIATE_BREACH";
-                btn.style.opacity = "1";
-                log.innerHTML += `<div style="color:var(--main-green); font-weight:bold; margin-top:5px;">--- OPERATION COMPLETED ---</div>`;
-                return;
-            }
-
-            let currentNum = input[idx];
-            let randomLang = langs[Math.floor(Math.random() * langs.length)];
-            let result = Math.random() > 0.35; // Real logic simulation
-
-            if(result) {
+            if(i >= input.length) { clearInterval(timer); isRunning = false; return; }
+            let res = Math.random() > 0.4;
+            let lang = langs[Math.floor(Math.random() * langs.length)];
+            if(res) {
                 success++;
                 document.getElementById('suc_c').innerText = success;
-                log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] <span style="color:var(--main-green);">[OK]</span> ${currentNum} | lang:${randomLang}</div>`;
+                log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] <span style="color:var(--main-green);">[SENT]</span> ${input[i]} (${lang})</div>`;
             } else {
                 fail++;
                 document.getElementById('err_c').innerText = fail;
-                log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] <span style="color:#e74c3c;">[ERR]</span> ${currentNum} | lang:${randomLang}</div>`;
+                log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] <span style="color:#e74c3c;">[FAIL]</span> ${input[i]} (${lang})</div>`;
             }
-
             log.scrollTop = log.scrollHeight;
-            idx++;
-        }, velocity);
+            i++;
+        }, speed);
     }
+
+    function copyHWID() { navigator.clipboard.writeText("AKASH-" + myHWID); alert("Copied!"); }
 </script>
 </body>
-        </html>
+            </html>
