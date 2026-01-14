@@ -5,24 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AkashToolsPro V6.0 PRO</title>
     <style>
-        :root { --main-green: #2ecc71; --dark-bg: #0f1012; --card-bg: #151719; }
+        :root { --main-green: #2ecc71; --dark-bg: #0f1012; }
         body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 10px; }
         .app-container { max-width: 450px; margin: auto; background: white; border-radius: 40px; padding: 25px; min-height: 95vh; box-shadow: 0 10px 40px rgba(0,0,0,0.05); }
 
-        /* Login Card - Based on Screenshot_20260114-092003.png */
+        /* Login Card - */
         .auth-card { background: var(--dark-bg); color: white; border-radius: 60px; padding: 40px 25px; text-align: center; margin-top: 20px; }
         .hwid-field { background: #1a1c1e; border: 1px solid #222; border-radius: 18px; padding: 15px; margin: 25px 0 15px; display: flex; justify-content: space-between; align-items: center; }
         .input-field { width: 100%; background: #1a1c1e; border: 1px solid #222; padding: 18px; border-radius: 18px; color: white; margin-bottom: 25px; box-sizing: border-box; text-align: center; font-size: 14px; outline: none; }
         
         .btn-activate { width: 100%; background: #2c3e50; color: white; border: none; padding: 20px; border-radius: 20px; font-weight: bold; font-size: 16px; cursor: pointer; text-transform: uppercase; }
         .get-key-link { display: block; margin-top: 25px; color: #555; font-size: 11px; text-decoration: none; }
-        .get-key-link span { color: var(--main-green); }
+        .get-key-link span { color: var(--main-green); font-weight: bold; }
 
-        /* Dashboard UI - Based on Screenshot_20260113-174821.jpg */
+        /* Dashboard UI - */
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
         .stat-box { background: #fff; border: 1.5px solid #f8f9fa; padding: 15px; border-radius: 20px; text-align: center; }
         .stat-val { display: block; font-size: 24px; font-weight: bold; color: var(--main-green); }
-        .stat-label { font-size: 9px; color: #bdc3c7; font-weight: bold; }
+        .stat-label { font-size: 9px; color: #bdc3c7; font-weight: bold; text-transform: uppercase; }
         
         .log-panel { background: #fff; border: 1px solid #f0f0f0; border-radius: 25px; padding: 20px; margin-top: 20px; }
         .log-content { height: 180px; overflow-y: auto; font-size: 11px; font-family: monospace; line-height: 1.6; }
@@ -32,6 +32,10 @@
         .tab { flex: 1; padding: 12px; border-radius: 15px; border: 1px solid #eee; background: white; cursor: pointer; font-weight: bold; color: #7f8c8d; text-align: center; }
         .tab.active { background: var(--main-green); color: white; border: none; }
         .hidden { display: none !important; }
+        textarea { width:100%; height:120px; border-radius:20px; padding:15px; border:1px solid #f0f0f0; outline:none; box-sizing: border-box; }
+        
+        /* Expiry Display Style */
+        .expiry-badge { background: #fff0f0; color: #e74c3c; padding: 5px 15px; border-radius: 50px; font-size: 10px; font-weight: bold; margin-bottom: 10px; display: inline-block; border: 1px solid #f9d5d5; }
     </style>
 </head>
 <body>
@@ -45,7 +49,7 @@
             
             <div style="text-align:left; font-size:10px; color:#555; margin-left: 10px;">STATION_HWID</div>
             <div class="hwid-field">
-                <span id="hwid-display" style="color:var(--main-green); font-family:monospace; font-weight:bold;">AKASH-LOADING...</span>
+                <span id="hwid-display" style="color:var(--main-green); font-family:monospace; font-weight:bold;">LOADING...</span>
                 <span onclick="copyHWID()" style="color:#555; font-size: 12px; cursor:pointer; font-weight:bold;">COPY</span>
             </div>
 
@@ -62,7 +66,7 @@
     <div id="main-view" class="hidden">
         <div style="text-align:center; margin-bottom:15px;">
             <h2 style="color:var(--main-green); margin:0;">AkashToolsPro</h2>
-            <div id="exp-tag" style="font-size:10px; color:#e74c3c; font-weight:bold;"></div>
+            <div id="exp-tag" class="expiry-badge"></div>
         </div>
 
         <div class="nav-tabs">
@@ -77,12 +81,11 @@
                 <div class="stat-box"><span class="stat-val" style="color:#3498db" id="load_c">0</span><span class="stat-label">LOADED_NODES</span></div>
                 <div class="stat-box"><span class="stat-val" style="color:#9b59b6">00:00</span><span class="stat-label">ETR (TIME)</span></div>
             </div>
-            <textarea id="numbers" style="width:100%; height:120px; border-radius:20px; padding:15px; border:1px solid #f0f0f0; outline:none;" placeholder="Enter Numbers..." oninput="updateCount()"></textarea>
+            <textarea id="numbers" placeholder="Enter Target Numbers..." oninput="updateCount()"></textarea>
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px;">
                 <button class="btn-main" onclick="run()">START</button>
                 <button class="btn-main" style="background:#fff; color:#e74c3c; border:1px solid #f9d5d5;" onclick="stop()">STOP</button>
             </div>
-
             <div class="log-panel">
                 <div style="color:var(--main-green); font-weight:bold; font-size:11px; margin-bottom:10px;">● LIVE KERNEL LOG</div>
                 <div class="log-content" id="log-box"></div>
@@ -94,15 +97,15 @@
                 <div style="display:flex; justify-content:space-between;"><b>THREAD_VELOCITY</b><span id="tv" style="color:var(--main-green);">10</span></div>
                 <input type="range" min="1" max="50" value="10" style="width:100%; accent-color:var(--main-green);" oninput="document.getElementById('tv').innerText=this.value">
             </div>
-            <p style="font-size:11px; color:#bdc3c7; text-align:center;">Additional kernel configurations are active in background.</p>
         </div>
     </div>
-
 </div>
 
 <script>
-    // HWID Logic
-    function generateHWID() {
+    // আপনার (Admin) HWID এখানে দিন
+    const ADMIN_HWID = "DRBXLX"; 
+
+    function getID() {
         let id = localStorage.getItem('akash_id');
         if (!id) {
             id = Math.random().toString(36).substr(2, 6).toUpperCase();
@@ -110,40 +113,57 @@
         }
         return id;
     }
-    const myHWID = generateHWID();
+    const myHWID = getID();
     document.getElementById('hwid-display').innerText = "AKASH-" + myHWID;
+
+    // অটো-লগইন ফর অ্যাডমিন
+    window.onload = function() {
+        if (myHWID === ADMIN_HWID) {
+            unlockTool("ADMIN ACCESS (LIFETIME)");
+        }
+    }
 
     function copyHWID() {
         navigator.clipboard.writeText("AKASH-" + myHWID);
         alert("HWID Copied!");
     }
 
-    // Key Validation (Format: AKASH-YYYYMMDD-HWID)
+    function unlockTool(expiryMsg) {
+        document.getElementById('auth-view').classList.add('hidden');
+        document.getElementById('main-view').classList.remove('hidden');
+        document.getElementById('exp-tag').innerText = expiryMsg;
+    }
+
     function validate() {
         const key = document.getElementById('license-key').value.trim();
         const msg = document.getElementById('msg');
         
+        // অ্যাডমিন যদি কি ব্যবহার করতে চায়
+        if (myHWID === ADMIN_HWID) {
+            unlockTool("ADMIN ACCESS (LIFETIME)");
+            return;
+        }
+
         try {
             const parts = key.split('-');
-            if (parts.length !== 3 || parts[0] !== "AKASH") throw "Invalid";
+            if (parts.length !== 3 || parts[0] !== "AKASH") throw "Format Error";
 
             const expiryStr = parts[1];
             const keyHWID = parts[2];
 
-            if (keyHWID !== myID && keyHWID !== myHWID) {
-                msg.innerText = "❌ Key locked to another HWID!";
+            if (keyHWID !== myHWID) {
+                msg.innerText = "❌ Key locked to another device!";
                 return;
             }
 
-            const y = expiryStr.substring(0,4), m = expiryStr.substring(4,6), d = expiryStr.substring(6,8);
+            const y = expiryStr.substring(0, 4), m = expiryStr.substring(4, 6), d = expiryStr.substring(6, 8);
             const expiryDate = new Date(`${y}-${m}-${d}`);
             
             if (expiryDate < new Date()) {
-                msg.innerText = "❌ This License Key has Expired!";
+                msg.innerText = "❌ License Expired!";
             } else {
-                document.getElementById('auth-view').classList.add('hidden');
-                document.getElementById('main-view').classList.remove('hidden');
-                document.getElementById('exp-tag').innerText = "EXPIRES: " + expiryDate.toDateString();
+                // সাধারণ ইউজারদের জন্য তাদের মেয়াদ দেখাবে
+                unlockTool("EXPIRES ON: " + expiryDate.toDateString());
             }
         } catch(e) {
             msg.innerText = "❌ Invalid Key Format!";
@@ -164,14 +184,14 @@
 
     function run() {
         const log = document.getElementById('log-box');
-        log.innerHTML += `<div style="margin-bottom:5px;">[${new Date().toLocaleTimeString()}] <span style="color:#2ecc71;">INITIATING_BREACH...</span></div>`;
+        log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] <span style="color:#2ecc71;">✅ KERNEL_INITIATED...</span></div>`;
         log.scrollTop = log.scrollHeight;
     }
 
     function stop() {
         const log = document.getElementById('log-box');
-        log.innerHTML += `<div style="margin-bottom:5px;">[${new Date().toLocaleTimeString()}] <span style="color:#e74c3c;">SESSION_STOPPED.</span></div>`;
+        log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] <span style="color:#e74c3c;">🛑 OPERATION_HALTED.</span></div>`;
     }
 </script>
 </body>
-                </html>
+    </html>
